@@ -1,0 +1,4 @@
+
+const rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~]/;
+
+export { rSpecialCharacters };
