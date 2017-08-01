@@ -8,7 +8,7 @@ import parsed from "./parsed";
 export default function selector(string) {
     const selected = parsed;
 
-    let current,
+    let current, append,
         cursor = 0;
 
     while (cursor < string.length) {
@@ -16,12 +16,18 @@ export default function selector(string) {
 
         // type selector
         // id selector
+        if (current === "#") {
 
+        }
 
         // class selector
         // attribute selector
 
         cursor++;
+    }
+
+    function isEscaped(char) {
+        return char >= 2 && string.substring(char - 2, char) === "\\\\";
     }
 
     return selected;
