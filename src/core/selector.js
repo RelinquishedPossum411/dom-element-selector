@@ -13,12 +13,15 @@ export default function selector(string) {
         cursor = 0;
 
     while (cursor < string.length) {
+        let component;
+
         current = string[cursor];
 
         // type selector
         // id selector
         if (current === "#") {
-
+            component = getSubstring(string.substring(cursor + 1)).sub[0];
+            console.log("here! " + component);
         }
 
         // class selector
@@ -33,7 +36,7 @@ export default function selector(string) {
      * substring extracted following '#' will be an id of an element.
      */
     function getSubstring(string) {
-        let strIndex = 0,
+        let strIndex = -1,
             splitted = string.split(regex.rSpecialCharacters);
 
         for (let i = 0; i < splitted.length; i++) {
@@ -44,44 +47,27 @@ export default function selector(string) {
 
             // Check previous entry, to see if the delimiting character was
             // escaped. If so, put it back.
-            if (splitted[i - 1].endsWith("\\\\")) {
-                splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 2) + string[strIndex] + splitted[i]);
-                i--;
-            }
-        }
-
-        if (splitted.length > 1)
-            return splitted[0];
-
-        return "";
-    }
-
-    function getSubstring(string) {
-        let strIndex = 0,
-            splitted = string.split(regex.rSpecialCharacters);
-
-        for (let i = 0; i < splitted.length; i++) {
-            strIndex += splitted[i].length + 1;
-    		//console.log(splitted[i].length);
-
-            if (i == 0) {
-            	strIndex--;
-                continue;
-            }
-
-            // Check previous entry, to see if the delimiting character was
-            // escaped. If so, put it back.
             if (splitted[i - 1].endsWith("\\")) {
-                splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
-                i--;
+                // Skip if it's a space.
+                if (string[strIndex - splitted[i].length] === " ")
+                    splitted[i - 1] = splitted[i - 1].substring(0, splitted[i - 1].length - 1);
+                else {
+                    splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
+                    i--;
+                }
             }
+
+            console.log(splitted);
         }
 
-        return splitted[0];
+        return {
+            sub: splitted,
+            length: splitted.length
+        };
     }
 
     function isEscaped(char) {
-        return char >= 2 && string.substring(char - 2, char) === "\\\\";
+        return char >= 2 && string.substring(char - 2, char) === "\\";
     }
 
     return selected;
