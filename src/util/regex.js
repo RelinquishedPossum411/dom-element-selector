@@ -1,4 +1,4 @@
 
-const rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~]/;
+const rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~ ]/;
 
 export { rSpecialCharacters };
