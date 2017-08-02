@@ -1,19 +1,25 @@
 
+import * as regex from "../util/regex";
+
 /**
- * After matching a special character, this method extracts the substring
- * that corresponds with the special character. For example, the first
- * substring extracted following '#' will be an id of an element.
+ * Splits a string about a regex, by default if no regex is specified, then
+ * it will split by any 'special character.' Then all strings with escaped
+ * characters are concatenated.
  */
-export function getSubstring(string) {
+export default function getSubstring(string, reg) {
+    reg = reg ? reg : regex.rSpecialCharacters;
+
     let strIndex = -1,
         // This will keep track of how many times the first item got merged.
         mergedFirst = 0,
-        splitted = string.split(regex.rSpecialCharacters);
+        delimiters = [],
+        splitted = string.split(reg);
 
     for (let i = 0; i < splitted.length; i++) {
         strIndex += splitted[i].length + 1;
 
         console.log(splitted);
+        console.log(delimiters);
 
         if (i === 0)
             continue;
@@ -31,13 +37,17 @@ export function getSubstring(string) {
                 splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
                 i--;
             }
+        } else {
+            // If it is not escaped, record the delimiter
+            delimiters.push(string[strIndex - splitted[i].length - 1]);
         }
 
         console.log(splitted);
     }
-    
+
     return {
         sub: splitted,
+        delimiters: delimiters,
         length: splitted.length,
         mergedFirst: mergedFirst
     };

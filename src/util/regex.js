@@ -1,4 +1,5 @@
 
-const rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~ ]/;
+const   rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~ ]/,
+        rSpecialSeparators = /[>+~, ]/;
 
-export { rSpecialCharacters };
+export { rSpecialCharacters, rSpecialSeparators };
