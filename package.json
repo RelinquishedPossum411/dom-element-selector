@@ -10,5 +10,8 @@
     "test": "webpack"
   },
   "author": "Benjamin Huang",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+      "webpack": "*"
+  }
 }
