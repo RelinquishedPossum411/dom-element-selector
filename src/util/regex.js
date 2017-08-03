@@ -1,5 +1,7 @@
 
 const   rSpecialCharacters = /[!"#$%&'()*+,./:;<=>?@[\]^`{|}~ ]/,
-        rSpecialSeparators = /[>+~, ]/;
+        rSpecialSeparators = /[>+~,\s]/,
+        rWhitespace = /\s/,
+        rStringWhitespace = /^\s$/;
 
-export { rSpecialCharacters, rSpecialSeparators };
+export { rSpecialCharacters, rSpecialSeparators, rWhitespace, rStringWhitespace };
