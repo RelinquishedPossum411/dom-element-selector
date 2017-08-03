@@ -22,6 +22,8 @@ export default function tidy(components, delimiters) {
                 delimiters.splice(i, 1);
                 components.splice(j, 1);
             }
+
+            i--;
         }
     }
 }

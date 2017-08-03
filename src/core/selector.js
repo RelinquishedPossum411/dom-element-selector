@@ -1,13 +1,24 @@
 
 import parsed from "./parsed";
-import getSubstring from "./splitter";
+import splitter from "./splitter";
+import tidyer from "../util/delimiterClean";
 import * as regex from "../util/regex";
 
 /**
  * Parses a CSS selector string into a workable tree.
  * @return an object containing the parts of the selector.
  */
-export default function selector(string) {
+export default function selector(string, init) {
+    if (init) {
+        let components = splitter(string, regex.rSpecialSeparators),
+            comps = tidyer(components.sub, components.delimiters);
+
+        return {
+            components: components.sub.map((component) => selector(component, false)),
+            delimiters: components.delimiters
+        };
+    }
+
     const selected = parsed();
 
     let current, append,
@@ -26,9 +37,8 @@ export default function selector(string) {
 
 
         // id selector
-
         if (current === "#") {
-            substring = getSubstring(string.substring(cursor + 1));
+            substring = splitter(string.substring(cursor + 1));
             component = substring.sub[0];
             selected.id = component;
 
@@ -40,7 +50,7 @@ export default function selector(string) {
 
         // class selector
         else if (current === ".") {
-            substring = getSubstring(string.substring(cursor + 1));
+            substring = splitter(string.substring(cursor + 1));
             component = substring.sub[0];
 
 

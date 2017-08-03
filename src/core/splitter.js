@@ -28,7 +28,7 @@ export default function getSubstring(string, reg) {
         // escaped. If so, put it back.
         if (splitted[i - 1].endsWith("\\")) {
             // Skip if it's a space.
-            if (string[strIndex - splitted[i].length] === " ")
+            if (regex.rWhitespace.test(string[strIndex - splitted[i].length]))
                 splitted[i - 1] = splitted[i - 1].substring(0, splitted[i - 1].length - 1);
             else {
                 if (i - 1 === 0)
