@@ -27,16 +27,11 @@ export default function getSubstring(string, reg) {
         // Check previous entry, to see if the delimiting character was
         // escaped. If so, put it back.
         if (splitted[i - 1].endsWith("\\")) {
-            // Skip if it's a space.
-            if (regex.rWhitespace.test(string[strIndex - splitted[i].length]))
-                splitted[i - 1] = splitted[i - 1].substring(0, splitted[i - 1].length - 1);
-            else {
-                if (i - 1 === 0)
-                    mergedFirst++;
+            if (i - 1 === 0)
+                mergedFirst++;
 
-                splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
-                i--;
-            }
+            splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
+            i--;
         } else {
             // If it is not escaped, record the delimiter
             delimiters.push(string[strIndex - splitted[i].length - 1]);
