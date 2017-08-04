@@ -1,2 +1,5 @@
 
+# If using WebStorm IDE
+.idea/
+
 node_modules/
