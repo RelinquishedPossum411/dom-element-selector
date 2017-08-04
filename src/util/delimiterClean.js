@@ -34,7 +34,7 @@ export default function tidy(components, delimiters) {
  *
  * @return whether the components and delimiters passed the test.
  */
-export let delimiterValidator = function(components, delimiters) {
+export function delimiterValidator(components, delimiters) {
     if (components.length != delimiters.length + 1) {
         console.error("[Selector] Potential parsing problem.");
         return false;

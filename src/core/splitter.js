@@ -7,8 +7,6 @@ import * as regex from "../util/regex";
  * characters are concatenated.
  */
 export default function splitter(string, reg) {
-    console.log("splitting " + string);
-
     reg = reg ? reg : regex.rSpecialCharacters;
 
     let strIndex = -1,

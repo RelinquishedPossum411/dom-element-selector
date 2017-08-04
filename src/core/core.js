@@ -1,11 +1,16 @@
 
-import selector from "./selector";
+import grouper from "./grouper";
 import splitter from "./splitter";
 import tidyer from "../util/delimiterClean";
 
 export default class Selector {
     static select(string) {
-        return selector(string, true);
+        try {
+            return grouper(string);
+        } catch (exception) {
+            console.error("[Selector] Parsing error:\n" + exception);
+            return null;
+        }
     }
 
     // TODO: remove - debugging only.

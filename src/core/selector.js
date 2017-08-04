@@ -1,4 +1,5 @@
 
+import grouper from "./grouper";
 import parsed from "./parsed";
 import splitter from "./splitter";
 import tidyer, { delimiterValidator } from "../util/delimiterClean";
@@ -6,19 +7,11 @@ import * as regex from "../util/regex";
 
 /**
  * Parses a CSS selector string into a workable tree.
+ * Would parse a string like: "tag#id.class".
+ *
  * @return an object containing the parts of the selector.
  */
-export default function selector(string, init) {
-    if (init) {
-        let components = splitter(string, regex.rSpecialSeparators),
-            comps = tidyer(components.sub, components.delimiters);
-
-        return {
-            components: components.sub.map((component) => selector(component, false)),
-            delimiters: components.delimiters
-        };
-    }
-
+export default function selector(string) {
     const selected = parsed();
 
     let current, append,
@@ -30,7 +23,6 @@ export default function selector(string, init) {
     }
 
     // First split into multiple parts
-
     while (cursor < string.length) {
         let component, substring;
 
