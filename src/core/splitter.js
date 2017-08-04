@@ -6,7 +6,9 @@ import * as regex from "../util/regex";
  * it will split by any 'special character.' Then all strings with escaped
  * characters are concatenated.
  */
-export default function getSubstring(string, reg) {
+export default function splitter(string, reg) {
+    console.log("splitting " + string);
+
     reg = reg ? reg : regex.rSpecialCharacters;
 
     let strIndex = -1,

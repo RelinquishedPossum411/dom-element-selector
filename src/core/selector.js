@@ -1,7 +1,7 @@
 
 import parsed from "./parsed";
 import splitter from "./splitter";
-import tidyer from "../util/delimiterClean";
+import tidyer, { delimiterValidator } from "../util/delimiterClean";
 import * as regex from "../util/regex";
 
 /**
@@ -22,7 +22,12 @@ export default function selector(string, init) {
     const selected = parsed();
 
     let current, append,
-        cursor = 0;
+        cursor = 0,
+        components = splitter(string, regex.rSelectorConstructs);
+
+    if (!delimiterValidator(components.sub, components.delimiters)) {
+        return;
+    }
 
     // First split into multiple parts
 
