@@ -50,6 +50,7 @@ export function delimiterValidator(components, delimiters) {
 
         if (components[i] === "" || components[i + 1] === "") {
             // Special case, so skip.
+            // "#id" and ".class" are acceptable.
             if (components[i] === "" && i === 0)
                 continue;
 
@@ -58,9 +59,9 @@ export function delimiterValidator(components, delimiters) {
             for (let a of errorString)
                 errorString += " ";
 
-            errorString = errorString.substring(0, errorString.length - 1) + "^";
+            errorString = errorString.substring(0) + "\t^";
 
-            console.warn("[Selector] Unexpected syntax:\n\t" + errorString + "\n\t");
+            console.warn("[Selector] Unexpected syntax on string '" + components[i] + delimiters[i] + (components[i + 1] || "") + "':\n\t" + errorString);
 
             return false;
         }
