@@ -14,7 +14,7 @@ import * as regex from "../util/regex";
 export default function selector(string) {
     const selected = parsed();
 
-    let current, append,
+    let parts, delimiters,
         cursor = 0,
         components = splitter(string, regex.rSelectorConstructs);
 
@@ -22,47 +22,34 @@ export default function selector(string) {
         return;
     }
 
-    // First split into multiple parts
-    while (cursor < string.length) {
-        let component, substring;
+    console.log(components.sub);
+    console.log(components.delimiters);
 
-        current = string[cursor];
+    parts = components.sub;
+    delimiters = components.delimiters;
 
-        // type selector: A type or tag will either be the first component of
-        // the selector, or following any of ' ', '>', '~', ',' or '+'
-        // delimiters.
-
-
-        // id selector
-        if (current === "#") {
-            substring = splitter(string.substring(cursor + 1));
-            component = substring.sub[0];
-            selected.id = component;
-
-            // Compensate for lost merging characters.
-            cursor += component.length + substring.mergedFirst;
-
-            console.log("here! " + component + "\n" + substring.mergedFirst);
-        }
-
-        // class selector
-        else if (current === ".") {
-            substring = splitter(string.substring(cursor + 1));
-            component = substring.sub[0];
-
-
-            selected.classes.push(component);
-
-            cursor += component.length + substring.mergedFirst;
-        }
-
-        // attribute selector
-
-        cursor++;
+    // Check each delimiter with its respective string.
+    // tag
+    if (parts[0]) {
+        if (!selected.tag)
+            selected.tag = parts[0];
+        else
+            return;
     }
 
-    function isEscaped(char) {
-        return char >= 2 && string.substring(char - 2, char) === "\\";
+    for (let i = 0; i < parts.length; i++) {
+        // classes
+        if (delimiters[i] === ".") {
+            selected.classes.push(parts[i + 1]);
+        }
+
+        // id
+        else if (delimiters[i] === "#") {
+            if (!selected.id)
+                selected.id = parts[i + 1];
+            else
+                return;
+        }
     }
 
     return selected;
