@@ -49,6 +49,10 @@ export function delimiterValidator(components, delimiters) {
         errorString += components[i] + delimiters[i];
 
         if (components[i] === "" || components[i + 1] === "") {
+            // Special case, so skip.
+            if (components[i] === "" && i === 0)
+                continue;
+
             errorString += "\n";
 
             for (let a of errorString)
