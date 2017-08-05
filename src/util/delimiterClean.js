@@ -17,8 +17,7 @@ export default function tidy(components, delimiters) {
                 components.splice(i, 1);
                 i--;
             }
-
-            if (components[i + 1] === "") {
+            else if (components[i + 1] === "") {
                 delimiters.splice(i, 1);
                 components.splice(i + 1, 1);
                 i--;
