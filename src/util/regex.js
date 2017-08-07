@@ -3,7 +3,7 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
         rSpecialSeparators = /[>+~,\s]/,
         rWhitespace = /\s/,
         rStringWhitespace = /^\s$/,
-        rSelectorConstructs = /[#:.]/,
+        rSelectorConstructs = /[\[\]#:.]/,
         rSelectAll = /[*]/;
 
 export {
