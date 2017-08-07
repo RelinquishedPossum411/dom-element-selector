@@ -37,7 +37,7 @@ export default function selector(string) {
             return;
     }
 
-    for (let i = 0; i < parts.length; i++) {
+    for (let i = 0; i < delimiters.length; i++) {
         // classes
         if (delimiters[i].match(/^\.$/)) {
             selected.classes.push(parts[i + 1]);

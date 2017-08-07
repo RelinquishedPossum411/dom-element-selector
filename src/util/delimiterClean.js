@@ -24,6 +24,8 @@ export default function tidy(components, delimiters) {
             }
         }
     }
+
+    return true;
 }
 
 /**
