@@ -9,7 +9,8 @@ import * as regex from "../util/regex";
 export default function splitter(string, reg) {
     reg = reg ? reg : regex.rSpecialCharacters;
 
-    let strIndex = -1,
+    let delimiter,
+        strIndex = -1,
         // This will keep track of how many times the first item got merged.
         mergedFirst = 0,
         delimiters = [],
@@ -17,6 +18,7 @@ export default function splitter(string, reg) {
 
     for (let i = 0; i < splitted.length; i++) {
         strIndex += splitted[i].length + 1;
+        delimiter = string[strIndex - splitted[i].length - 1];
 
         console.log(splitted);
         console.log(delimiters);
@@ -26,15 +28,16 @@ export default function splitter(string, reg) {
 
         // Check previous entry, to see if the delimiting character was
         // escaped. If so, put it back.
-        if (splitted[i - 1].endsWith("\\")) {
+        if (splitted[i - 1].endsWith("\\") ||
+            (delimiter.match(/\~/) && splitted[i].startsWith("="))) {
             if (i - 1 === 0)
                 mergedFirst++;
 
-            splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
+            splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - (splitted[i - 1].endsWith("\\") ? 1 : 0)) + delimiter + splitted[i]);
             i--;
         } else {
             // If it is not escaped, record the delimiter
-            delimiters.push(string[strIndex - splitted[i].length - 1]);
+            delimiters.push(delimiter);
         }
 
         console.log(splitted);
