@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,9 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = splitter;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_regex__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_logger__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_regex__ = __webpack_require__(0);
+
 
 
 
@@ -100,7 +102,9 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
  * characters are concatenated.
  */
 function splitter(string, reg) {
-    reg = reg ? reg : __WEBPACK_IMPORTED_MODULE_0__util_regex__["b" /* rSpecialCharacters */];
+    reg = reg ? reg : __WEBPACK_IMPORTED_MODULE_1__util_regex__["b" /* rSpecialCharacters */];
+
+    const logger = __WEBPACK_IMPORTED_MODULE_0__util_logger__["a" /* default */].getLogger("selector");
 
     let delimiter,
         strIndex = -1,
@@ -109,12 +113,15 @@ function splitter(string, reg) {
         delimiters = [],
         splitted = string.split(reg);
 
+    logger.log("Splitting string: '" + string + "'");
+
     for (let i = 0; i < splitted.length; i++) {
         strIndex += splitted[i].length + 1;
         delimiter = string[strIndex - splitted[i].length - 1];
 
-        console.log(splitted);
-        console.log(delimiters);
+        logger.log("Split string into parts:");
+        logger.log("\tComponents: " + splitted.toString());
+        logger.log("\tDelimiters: " + delimiters.toString());
 
         if (i === 0)
             continue;
@@ -132,8 +139,6 @@ function splitter(string, reg) {
             // If it is not escaped, record the delimiter
             delimiters.push(delimiter);
         }
-
-        console.log(splitted);
     }
 
     return {
@@ -147,6 +152,83 @@ function splitter(string, reg) {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = Loggers;
+
+const loggers = {};
+
+function Loggers() {}
+
+Loggers.getLogger = function (name) {
+    if (!name) {
+        if (!loggers[native])
+            loggers[native] = new Logger();
+
+        return loggers[native];
+    }
+
+    return loggers[name] || null;
+}
+
+Loggers.newLogger = function (name) {
+    if (!name) {
+        if (!loggers[native])
+            loggers[native] = new Logger();
+
+        return loggers[native];
+    }
+
+    loggers[name] = new Logger();
+
+    return loggers[name];
+}
+
+class Logger {
+    constructor() {
+        this.lines = [];
+    }
+
+    add(string) {
+        this.lines.push(string + "");
+    }
+
+    append(string) {
+        if (this.lines.length) {
+            this.lines[this.lines.length - 1].concat(string + "");
+        }
+    }
+
+    appendFirst(string) {
+        if (this.lines.length) {
+            this.lines[0].concat(string + "");
+        }
+    }
+
+    log(string) {
+        this.add(string);
+    }
+
+    toString() {
+        let string = "";
+
+        for (let i = 0; i < this.lines.length; i++) {
+            string += "[" + (i + 1) + "] " + this.lines[i];
+        }
+
+        return string;
+    }
+
+    toConsole() {
+        for (let i = 0; i < this.lines.length; i++)
+            console.log("[" + (i + 1) + "] " + this.lines[i]);
+    }
+}
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -179,6 +261,8 @@ function tidy(components, delimiters) {
             }
         }
     }
+
+    return true;
 }
 
 /**
@@ -238,15 +322,17 @@ function delimiterValidator(components, delimiters) {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = grouper;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__splitter__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_regex__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_logger__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(0);
+
 
 
 
@@ -258,17 +344,23 @@ function delimiterValidator(components, delimiters) {
  * individually.
  */
  function grouper(string) {
-     let components = Object(__WEBPACK_IMPORTED_MODULE_1__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_3__util_regex__["c" /* rSpecialSeparators */]);
+     const logger = __WEBPACK_IMPORTED_MODULE_3__util_logger__["a" /* default */].newLogger("selector");
+     let components = Object(__WEBPACK_IMPORTED_MODULE_1__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_4__util_regex__["c" /* rSpecialSeparators */]);
 
      // Clean the components up.
-     Object(__WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__["a" /* default */])(components.sub, components.delimiters);
+     if (Object(__WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__["a" /* default */])(components.sub, components.delimiters))
+        logger.add("Successfully tidied up the components.");
+    else
+        logger.add("Fatal error in cleaning up the components.");
 
      return {
          components: components.sub.map((component) => {
              let tree = Object(__WEBPACK_IMPORTED_MODULE_0__selector__["a" /* default */])(component);
 
-             if (!tree)
-                throw new Error("[Selector] Parsing failed.");
+             if (!tree) {
+                 logger.add("Failed to parse. Throwing error...");
+                 throw new Error("Parsing failed.");
+            }
 
             return tree;
          }),
@@ -278,20 +370,20 @@ function delimiterValidator(components, delimiters) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(10);
+/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(12);
 
 
 
 
 ((global, Selector) => {
     if (typeof define === "function" &&
-        __webpack_require__(12)) {
+        __webpack_require__(14)) {
         define(() => {
             global.Selector = Selector;
             return global.Selector;
@@ -303,10 +395,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
 })(__WEBPACK_IMPORTED_MODULE_1__util_globals__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__core__["a" /* default */]);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -336,37 +428,47 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(8);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__core_core__["a"]; });
 
 
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__splitter__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_logger__ = __webpack_require__(2);
+
 
 
 
 
 
 class Selector {
-    static select(string) {
+    static select(string, pipeToConsole) {
         try {
             return Object(__WEBPACK_IMPORTED_MODULE_0__grouper__["a" /* default */])(string);
         } catch (exception) {
             console.error("[Selector] Parsing error:\n" + exception);
             return null;
         }
+
+        if (pipeToConsole)
+            this.getLastLog().toConsole();
+    }
+
+
+    static getLastLog() {
+        return __WEBPACK_IMPORTED_MODULE_3__util_logger__["a" /* default */].getLogger("selector");
     }
 
     // TODO: remove - debugging only.
@@ -385,15 +487,15 @@ class Selector {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = selector;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(0);
 
 
@@ -434,7 +536,7 @@ function selector(string) {
             return;
     }
 
-    for (let i = 0; i < parts.length; i++) {
+    for (let i = 0; i < delimiters.length; i++) {
         // classes
         if (delimiters[i].match(/^\.$/)) {
             selected.classes.push(parts[i + 1]);
@@ -511,10 +613,12 @@ function selector(string) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_deepCopy__ = __webpack_require__(11);
+
 
 
 let parsed = {
@@ -557,12 +661,119 @@ let parsed = {
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (function () {
-    return Object.create(parsed);
+    return Object(__WEBPACK_IMPORTED_MODULE_0__util_deepCopy__["a" /* deepMergeObject */])({}, parsed);
 });;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export isDeepCopy */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return deepMergeObject; });
+/* unused harmony export deepMergeArray */
+/**
+ * Deep Copyer
+ * Performs a deep copy on object literals and arrays and covers all nested
+ * object literals and arrays.
+ * @author Benjamin Huang
+ */
+
+
+
+const toStr = Object.prototype.toString;
+
+/**
+ * Checks whether an object literal or array is a "deep copy" with another
+ * specified object literal or array.
+ * @param   a - an object literal or an array.
+ * @param   b - an object literal or an array to compare with.
+ * @return  returns true if all values and nested items are clones of each
+ *          other. Returns false otherwise.
+ */
+function isDeepCopy(a, b) {
+    for (const c in a) {
+        if (toStr.call(a[c]) === "[object Object]" ||
+            toStr.call(a[c]) === "[object Array]") {
+            if (!b[c] || a[c] === b[c]) {
+                return false;
+            }
+
+            return isDeepCopy(a[c], b[c]);
+        }
+
+        if (a[c] !== b[c])
+            return false;
+    }
+
+    return true;
+}
+
+/**
+ * Copies all values and nested items from all specified sources into a target.
+ * @param   target - the object literal to copy the values of all
+ *          sources into.
+ * @param   ...sources - one or more object literals to copy values to the
+ *          target. Repeated values are overridden.
+ * @return  Returns the target object literal.
+ */
+function deepMergeObject(target, ...sources) {
+    let src;
+
+    for (const i of sources)
+        if (toStr.call(target) !== "[object Object]" ||
+            toStr.call(i) !== "[object Object]")
+            return;
+
+    for (const source of sources) {
+        for (const item in source) {
+            src = source[item];
+            target[item] =  toStr.call(src) === "[object Object]" ?
+                            Object.assign({}, deepMergeObject({}, src)) : (
+                                toStr.call(src) === "[object Array]" ?
+                                deepMergeArray([], src) :
+                                source[item]);
+        }
+    }
+
+    return target;
+}
+
+/**
+ * Copies all values and nested items from all specified sources into a target.
+ * @param   target - the array to copy the values of all
+ *          sources into.
+ * @param   ...sources - one or more arrays to copy values to the
+ *          target. Repeated values are overridden.
+ * @return  Returns the target array.
+ */
+function deepMergeArray(target, ...sources) {
+    for (const i of sources)
+        if (toStr.call(target) !== "[object Array]" ||
+            toStr.call(i) !== "[object Array]")
+            return;
+
+    for (const source of sources) {
+        for (const item of source) {
+            target.push(
+                toStr.call(item) === "[object Array]" ?
+                deepMergeArray([], item) : (
+                    toStr.call(item) === "[object Object]" ?
+                    deepMergeObject({}, item) :
+                    item)
+            );
+        }
+    }
+
+    return target;
+}
+
+
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -574,10 +785,10 @@ const glob = window || global || this || null; // Eh, just use this
 
 /* harmony default export */ __webpack_exports__["a"] = (glob);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 var g;
@@ -604,7 +815,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
