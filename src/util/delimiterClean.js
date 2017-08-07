@@ -45,13 +45,15 @@ export function delimiterValidator(components, delimiters) {
         errorString = "";
 
     for (; i < delimiters.length; i++) {
-        pos += components[i].length + 1;
         errorString += components[i] + delimiters[i];
 
         if (components[i] === "" || components[i + 1] === "") {
             // Special case, so skip.
             // "#id" and ".class" are acceptable.
             if (components[i] === "" && i === 0)
+                continue;
+
+            if (i >= delimiters.length - 1 && delimiters[i].match(/\]/))
                 continue;
 
             errorString += "\n";
