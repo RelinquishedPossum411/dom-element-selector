@@ -39,19 +39,19 @@ export default function selector(string) {
 
     for (let i = 0; i < parts.length; i++) {
         // classes
-        if (delimiters[i] === ".") {
+        if (delimiters[i].match(/^\.$/)) {
             selected.classes.push(parts[i + 1]);
         }
 
         // id
-        else if (delimiters[i] === "#") {
+        else if (delimiters[i].match(/^\#$/)) {
             if (!selected.id)
                 selected.id = parts[i + 1];
             else
                 return;
         }
 
-        else if (delimiters[i] === "[") {
+        else if (delimiters[i].match(/^\[$/)) {
             // Check if there is a closing brace.
             if (delimiters[i + 1] && delimiters[i + 1] !== "]")
                 return;
