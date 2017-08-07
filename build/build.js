@@ -102,7 +102,8 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
 function splitter(string, reg) {
     reg = reg ? reg : __WEBPACK_IMPORTED_MODULE_0__util_regex__["b" /* rSpecialCharacters */];
 
-    let strIndex = -1,
+    let delimiter,
+        strIndex = -1,
         // This will keep track of how many times the first item got merged.
         mergedFirst = 0,
         delimiters = [],
@@ -110,6 +111,7 @@ function splitter(string, reg) {
 
     for (let i = 0; i < splitted.length; i++) {
         strIndex += splitted[i].length + 1;
+        delimiter = string[strIndex - splitted[i].length - 1];
 
         console.log(splitted);
         console.log(delimiters);
@@ -119,15 +121,16 @@ function splitter(string, reg) {
 
         // Check previous entry, to see if the delimiting character was
         // escaped. If so, put it back.
-        if (splitted[i - 1].endsWith("\\")) {
+        if (splitted[i - 1].endsWith("\\") ||
+            (delimiter.match(/\~/) && splitted[i].startsWith("="))) {
             if (i - 1 === 0)
                 mergedFirst++;
 
-            splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - 1) + string[strIndex - splitted[i].length - 1] + splitted[i]);
+            splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - (splitted[i - 1].endsWith("\\") ? 1 : 0)) + delimiter + splitted[i]);
             i--;
         } else {
             // If it is not escaped, record the delimiter
-            delimiters.push(string[strIndex - splitted[i].length - 1]);
+            delimiters.push(delimiter);
         }
 
         console.log(splitted);
@@ -200,12 +203,21 @@ function delimiterValidator(components, delimiters) {
         errorString += components[i] + delimiters[i];
 
         if (components[i] === "" || components[i + 1] === "") {
-            // Special case, so skip.
+            // Skip special cases:
             // "#id" and ".class" are acceptable.
             if (components[i] === "" && i === 0)
                 continue;
 
-            if (i >= delimiters.length - 1 && delimiters[i].match(/\]/))
+            // A closing square bracket is acceptable as a closing delimiter.
+            if (i >= delimiters.length - 1 && delimiters[i].match(/^\]$/))
+                continue;
+
+            // An attribute selector that immediately follows another attribute
+            // selector is acceptable.
+            if (delimiters[i].match(/^\]$/) && delimiters[i + 1] && delimiters[i + 1].match(/^\[$/))
+                continue;
+
+            if (delimiters[i].match(/^\[$/) && delimiters[i - 1] && delimiters[i - 1].match(/^\]$/))
                 continue;
 
             errorString += "\n";
@@ -424,19 +436,19 @@ function selector(string) {
 
     for (let i = 0; i < parts.length; i++) {
         // classes
-        if (delimiters[i] === ".") {
+        if (delimiters[i].match(/^\.$/)) {
             selected.classes.push(parts[i + 1]);
         }
 
         // id
-        else if (delimiters[i] === "#") {
+        else if (delimiters[i].match(/^\#$/)) {
             if (!selected.id)
                 selected.id = parts[i + 1];
             else
                 return;
         }
 
-        else if (delimiters[i] === "[") {
+        else if (delimiters[i].match(/^\[$/)) {
             // Check if there is a closing brace.
             if (delimiters[i + 1] && delimiters[i + 1] !== "]")
                 return;
@@ -459,23 +471,28 @@ function selector(string) {
                     // Switch cases for the type of match.
                     if (lastCharacter.match(/^\*$/)) {
                         // Split by "=", so join the strings again with "=".
-                        attr.contains[sub] = join;
+                        if (!attr.contains[sub])
+                            attr.contains[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\~$/)) {
-                        attr.matchSpaces[sub] = join;
+                        if (!attr.matchSpaces[sub])
+                            attr.matchSpaces[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\|$/)) {
-                        attr.matchDashes[sub] = join;
+                        if (!attr.matchDashes[sub])
+                            attr.matchDashes[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {
-                        attr.startsWith = join;
+                        if (!attr.startsWith)
+                            attr.startsWith = join;
                     }
 
                     else if (lastCharacter.match(/^\$$/)) {
-                        attr.endsWith = join;
+                        if (!attr.endsWith)
+                            attr.endsWith = join;
                     }
 
                     else {
