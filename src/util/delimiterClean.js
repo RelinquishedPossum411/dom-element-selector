@@ -48,12 +48,18 @@ export function delimiterValidator(components, delimiters) {
         errorString += components[i] + delimiters[i];
 
         if (components[i] === "" || components[i + 1] === "") {
-            // Special case, so skip.
+            // Skip special cases:
             // "#id" and ".class" are acceptable.
             if (components[i] === "" && i === 0)
                 continue;
 
+            // A closing square bracket is acceptable as a closing delimiter.
             if (i >= delimiters.length - 1 && delimiters[i].match(/\]/))
+                continue;
+
+            // An attribute selector that immediately follows another attribute
+            // selector is acceptable.
+            if (delimiters[i].match(/\[/) && delimiters[i - 1] && delimiters[i - 1].match(/\]/))
                 continue;
 
             errorString += "\n";
