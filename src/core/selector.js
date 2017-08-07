@@ -50,6 +50,58 @@ export default function selector(string) {
             else
                 return;
         }
+
+        else if (delimiters[i] === "[") {
+            // Check if there is a closing brace.
+            if (delimiters[i + 1] && delimiters[i + 1] !== "]")
+                return;
+
+            if (parts[i + 1]) {
+                // Take out the attribute.
+                let lastCharacter, join, sub,
+                    attr = selected.attributes,
+                    split = parts[i + 1].split(/=/),
+                    first = split[0];
+
+                if (split.length === 1) {
+                    // Then there is only the attribute.
+                    attr.has.push(first);
+                } else {
+                    join = split.slice(1).join("=");
+                    lastCharacter = first.charAt(first.length - 1);
+                    sub = first.substring(0, first.length - 1);
+
+                    // Switch cases for the type of match.
+                    if (lastCharacter.match(/^\*$/)) {
+                        // Split by "=", so join the strings again with "=".
+                        attr.contains[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\~$/)) {
+                        attr.matchSpaces[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\|$/)) {
+                        attr.matchDashes[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\^$/)) {
+                        attr.startsWith = join;
+                    }
+
+                    else if (lastCharacter.match(/^\$$/)) {
+                        attr.endsWith = join;
+                    }
+
+                    else {
+                        // Finally, if no match, then we seek an exact match.
+                        if (!attr.match[first]) {
+                            attr.match[first] = join;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return selected;
