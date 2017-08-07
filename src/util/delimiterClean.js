@@ -54,15 +54,15 @@ export function delimiterValidator(components, delimiters) {
                 continue;
 
             // A closing square bracket is acceptable as a closing delimiter.
-            if (i >= delimiters.length - 1 && delimiters[i].match(/\]/))
+            if (i >= delimiters.length - 1 && delimiters[i].match(/^\]$/))
                 continue;
 
             // An attribute selector that immediately follows another attribute
             // selector is acceptable.
-            if (delimiters[i].match(/\]/) && delimiters[i + 1] && delimiters[i + 1].match(/\[/))
+            if (delimiters[i].match(/^\]$/) && delimiters[i + 1] && delimiters[i + 1].match(/^\[$/))
                 continue;
 
-            if (delimiters[i].match(/\[/) && delimiters[i - 1] && delimiters[i - 1].match(/\]/))
+            if (delimiters[i].match(/^\[$/) && delimiters[i - 1] && delimiters[i - 1].match(/^\]$/))
                 continue;
 
             errorString += "\n";
