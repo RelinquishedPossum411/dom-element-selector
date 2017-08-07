@@ -1,4 +1,5 @@
 
+import Logger from "../util/logger";
 import * as regex from "../util/regex";
 
 /**
@@ -9,6 +10,8 @@ import * as regex from "../util/regex";
 export default function splitter(string, reg) {
     reg = reg ? reg : regex.rSpecialCharacters;
 
+    const logger = Logger.getLogger("selector");
+
     let delimiter,
         strIndex = -1,
         // This will keep track of how many times the first item got merged.
@@ -16,12 +19,15 @@ export default function splitter(string, reg) {
         delimiters = [],
         splitted = string.split(reg);
 
+    logger.log("Splitting string: '" + string + "'");
+
     for (let i = 0; i < splitted.length; i++) {
         strIndex += splitted[i].length + 1;
         delimiter = string[strIndex - splitted[i].length - 1];
 
-        console.log(splitted);
-        console.log(delimiters);
+        logger.log("Split string into parts:");
+        logger.log("\tComponents: " + splitted.toString());
+        logger.log("\tDelimiters: " + delimiters.toString());
 
         if (i === 0)
             continue;
@@ -39,8 +45,6 @@ export default function splitter(string, reg) {
             // If it is not escaped, record the delimiter
             delimiters.push(delimiter);
         }
-
-        console.log(splitted);
     }
 
     return {
