@@ -59,6 +59,9 @@ export function delimiterValidator(components, delimiters) {
 
             // An attribute selector that immediately follows another attribute
             // selector is acceptable.
+            if (delimiters[i].match(/\]/) && delimiters[i + 1] && delimiters[i + 1].match(/\[/))
+                continue;
+
             if (delimiters[i].match(/\[/) && delimiters[i - 1] && delimiters[i - 1].match(/\]/))
                 continue;
 
