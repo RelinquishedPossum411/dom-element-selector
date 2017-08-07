@@ -29,10 +29,10 @@ let parsed = {
         matchDashes: {},
 
         // [attribute^=match]
-        startsWith: {},
+        startsWith: null,
 
         // [attribute$=match]
-        endsWith: {},
+        endsWith: null,
 
         // [attribute]
         has: []
