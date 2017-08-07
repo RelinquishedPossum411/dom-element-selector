@@ -74,23 +74,28 @@ export default function selector(string) {
                     // Switch cases for the type of match.
                     if (lastCharacter.match(/^\*$/)) {
                         // Split by "=", so join the strings again with "=".
-                        attr.contains[sub] = join;
+                        if (!attr.contains[sub])
+                            attr.contains[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\~$/)) {
-                        attr.matchSpaces[sub] = join;
+                        if (!attr.matchSpaces[sub])
+                            attr.matchSpaces[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\|$/)) {
-                        attr.matchDashes[sub] = join;
+                        if (!attr.matchDashes[sub])
+                            attr.matchDashes[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {
-                        attr.startsWith = join;
+                        if (!attr.startsWith)
+                            attr.startsWith = join;
                     }
 
                     else if (lastCharacter.match(/^\$$/)) {
-                        attr.endsWith = join;
+                        if (!attr.endsWith)
+                            attr.endsWith = join;
                     }
 
                     else {
