@@ -1,4 +1,5 @@
 
+import { deepMergeObject as deep } from "../util/deepCopy";
 
 let parsed = {
     // An ancestor, but not necessarily a direct ancestor.
@@ -40,5 +41,5 @@ let parsed = {
 };
 
 export default function () {
-    return Object.create(parsed);
+    return deep({}, parsed);
 };
