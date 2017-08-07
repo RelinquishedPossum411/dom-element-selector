@@ -78,7 +78,7 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
         rSpecialSeparators = /[>+~,\s]/,
         rWhitespace = /\s/,
         rStringWhitespace = /^\s$/,
-        rSelectorConstructs = /[#:.]/,
+        rSelectorConstructs = /[\[\]#:.]/,
         rSelectAll = /[*]/;
 
 
@@ -197,18 +197,25 @@ function delimiterValidator(components, delimiters) {
         errorString = "";
 
     for (; i < delimiters.length; i++) {
-        pos += components[i].length + 1;
         errorString += components[i] + delimiters[i];
 
         if (components[i] === "" || components[i + 1] === "") {
+            // Special case, so skip.
+            // "#id" and ".class" are acceptable.
+            if (components[i] === "" && i === 0)
+                continue;
+
+            if (i >= delimiters.length - 1 && delimiters[i].match(/\]/))
+                continue;
+
             errorString += "\n";
 
             for (let a of errorString)
                 errorString += " ";
 
-            errorString = errorString.substring(0, errorString.length - 1) + "^";
+            errorString = errorString.substring(0) + "\t^";
 
-            console.warn("[Selector] Unexpected syntax:\n\t" + errorString + "\n\t");
+            console.warn("[Selector] Unexpected syntax on string '" + components[i] + delimiters[i] + (components[i + 1] || "") + "':\n\t" + errorString);
 
             return false;
         }
@@ -392,7 +399,7 @@ class Selector {
 function selector(string) {
     const selected = Object(__WEBPACK_IMPORTED_MODULE_1__parsed__["a" /* default */])();
 
-    let current, append,
+    let parts, delimiters,
         cursor = 0,
         components = Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_4__util_regex__["a" /* rSelectorConstructs */]);
 
@@ -400,47 +407,86 @@ function selector(string) {
         return;
     }
 
-    // First split into multiple parts
-    while (cursor < string.length) {
-        let component, substring;
+    console.log(components.sub);
+    console.log(components.delimiters);
 
-        current = string[cursor];
+    parts = components.sub;
+    delimiters = components.delimiters;
 
-        // type selector: A type or tag will either be the first component of
-        // the selector, or following any of ' ', '>', '~', ',' or '+'
-        // delimiters.
-
-
-        // id selector
-        if (current === "#") {
-            substring = Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string.substring(cursor + 1));
-            component = substring.sub[0];
-            selected.id = component;
-
-            // Compensate for lost merging characters.
-            cursor += component.length + substring.mergedFirst;
-
-            console.log("here! " + component + "\n" + substring.mergedFirst);
-        }
-
-        // class selector
-        else if (current === ".") {
-            substring = Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string.substring(cursor + 1));
-            component = substring.sub[0];
-
-
-            selected.classes.push(component);
-
-            cursor += component.length + substring.mergedFirst;
-        }
-
-        // attribute selector
-
-        cursor++;
+    // Check each delimiter with its respective string.
+    // tag
+    if (parts[0]) {
+        if (!selected.tag)
+            selected.tag = parts[0];
+        else
+            return;
     }
 
-    function isEscaped(char) {
-        return char >= 2 && string.substring(char - 2, char) === "\\";
+    for (let i = 0; i < parts.length; i++) {
+        // classes
+        if (delimiters[i] === ".") {
+            selected.classes.push(parts[i + 1]);
+        }
+
+        // id
+        else if (delimiters[i] === "#") {
+            if (!selected.id)
+                selected.id = parts[i + 1];
+            else
+                return;
+        }
+
+        else if (delimiters[i] === "[") {
+            // Check if there is a closing brace.
+            if (delimiters[i + 1] && delimiters[i + 1] !== "]")
+                return;
+
+            if (parts[i + 1]) {
+                // Take out the attribute.
+                let lastCharacter, join, sub,
+                    attr = selected.attributes,
+                    split = parts[i + 1].split(/=/),
+                    first = split[0];
+
+                if (split.length === 1) {
+                    // Then there is only the attribute.
+                    attr.has.push(first);
+                } else {
+                    join = split.slice(1).join("=");
+                    lastCharacter = first.charAt(first.length - 1);
+                    sub = first.substring(0, first.length - 1);
+
+                    // Switch cases for the type of match.
+                    if (lastCharacter.match(/^\*$/)) {
+                        // Split by "=", so join the strings again with "=".
+                        attr.contains[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\~$/)) {
+                        attr.matchSpaces[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\|$/)) {
+                        attr.matchDashes[sub] = join;
+                    }
+
+                    else if (lastCharacter.match(/^\^$/)) {
+                        attr.startsWith = join;
+                    }
+
+                    else if (lastCharacter.match(/^\$$/)) {
+                        attr.endsWith = join;
+                    }
+
+                    else {
+                        // Finally, if no match, then we seek an exact match.
+                        if (!attr.match[first]) {
+                            attr.match[first] = join;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return selected;
@@ -483,10 +529,10 @@ let parsed = {
         matchDashes: {},
 
         // [attribute^=match]
-        startsWith: {},
+        startsWith: null,
 
         // [attribute$=match]
-        endsWith: {},
+        endsWith: null,
 
         // [attribute]
         has: []
