@@ -1,16 +1,24 @@
 
+import makeTree from "./tree";
 import grouper from "./grouper";
 import splitter from "./splitter";
 import tidyer from "../util/delimiterClean";
 import Logger from "../util/logger";
 
 export default class Selector {
+    static tree(string) {
+        try {
+            return makeTree(string);
+        } catch (exception) {
+            console.error("[Selector] Parsing error occurred when executing tree(): " + exception);
+        }
+    }
+
     static select(string, pipeToConsole) {
         try {
             return grouper(string);
         } catch (exception) {
             console.error("[Selector] Parsing error:\n" + exception);
-            return null;
         }
 
         if (pipeToConsole)

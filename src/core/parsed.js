@@ -13,6 +13,17 @@ let parsed = {
 
     // An immediate descendant.
     child: null,
+
+    // Before Neighbor: adjacent only
+    beforeNeighbor: null,
+
+    // After Neighbor: adjacent only
+    afterNeighbor: null,
+
+    beforeDistantNeighbor: null,
+
+    afterDistantNeighbor: null,
+
     tag: "",
     id: "",
     classes: [],
