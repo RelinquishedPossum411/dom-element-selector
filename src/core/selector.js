@@ -4,6 +4,7 @@ import parsed from "./parsed";
 import splitter from "./splitter";
 import tidyer, { delimiterValidator } from "../util/delimiterClean";
 import * as regex from "../util/regex";
+import dequote from "../util/dequote";
 
 /**
  * Parses a CSS selector string into a workable tree.
@@ -67,7 +68,7 @@ export default function selector(string) {
                     // Then there is only the attribute.
                     attr.has.push(first);
                 } else {
-                    join = split.slice(1).join("=");
+                    join = dequote(split.slice(1).join("="));
                     lastCharacter = first.charAt(first.length - 1);
                     sub = first.substring(0, first.length - 1);
 
@@ -79,13 +80,11 @@ export default function selector(string) {
                     }
 
                     else if (lastCharacter.match(/^\~$/)) {
-                        if (!attr.matchSpaces[sub])
-                            attr.matchSpaces[sub] = join;
+                        attr.matchSpaces[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\|$/)) {
-                        if (!attr.matchDashes[sub])
-                            attr.matchDashes[sub] = join;
+                        attr.matchDashes[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {
