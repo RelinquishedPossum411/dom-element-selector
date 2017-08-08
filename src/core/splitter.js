@@ -47,10 +47,25 @@ export default function splitter(string, reg) {
         }
     }
 
+    fixAttributes(splitted, delimiters);
+
     return {
         sub: splitted,
         delimiters: delimiters,
         length: splitted.length,
         mergedFirst: mergedFirst
     };
+}
+
+function fixAttributes(components, delimiters) {
+    let i = 0;
+
+    for (; i < delimiters.length; i++) {
+        if (delimiters[i].match(/\[/)) {
+            while (!delimiters[i + 1].match(/\]/) && i + 1 < delimiters.length) {
+                components.splice(i + 1, 2, components[i + 1] + delimiters[i + 1] + components[i + 2]);
+                delimiters.splice(i + 1, 1);
+            }
+        }
+    }
 }
