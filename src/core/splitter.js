@@ -14,8 +14,6 @@ export default function splitter(string, reg) {
 
     let delimiter,
         strIndex = -1,
-        // This will keep track of how many times the first item got merged.
-        mergedFirst = 0,
         delimiters = [],
         splitted = string.split(reg);
 
@@ -36,9 +34,6 @@ export default function splitter(string, reg) {
         // escaped. If so, put it back.
         if (splitted[i - 1].endsWith("\\") ||
             (delimiter.match(/\~/) && splitted[i].startsWith("="))) {
-            if (i - 1 === 0)
-                mergedFirst++;
-
             splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - (splitted[i - 1].endsWith("\\") ? 1 : 0)) + delimiter + splitted[i]);
             i--;
         } else {
@@ -51,9 +46,7 @@ export default function splitter(string, reg) {
 
     return {
         sub: splitted,
-        delimiters: delimiters,
-        length: splitted.length,
-        mergedFirst: mergedFirst
+        delimiters: delimiters
     };
 }
 
