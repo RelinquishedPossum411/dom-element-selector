@@ -78,7 +78,7 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
         rSpecialSeparators = /[>+~,\s]/,
         rWhitespace = /\s/,
         rStringWhitespace = /^\s$/,
-        rSelectorConstructs = /[\[\]#:.]/,
+        rSelectorConstructs = /[\[\]#:.+]/,
         rSelectAll = /[*]/;
 
 
@@ -141,12 +141,27 @@ function splitter(string, reg) {
         }
     }
 
+    fixAttributes(splitted, delimiters);
+
     return {
         sub: splitted,
         delimiters: delimiters,
         length: splitted.length,
         mergedFirst: mergedFirst
     };
+}
+
+function fixAttributes(components, delimiters) {
+    let i = 0;
+
+    for (; i < delimiters.length; i++) {
+        if (delimiters[i].match(/\[/)) {
+            while (!delimiters[i + 1].match(/\]/) && i + 1 < delimiters.length) {
+                components.splice(i + 1, 2, components[i + 1] + delimiters[i + 1] + components[i + 2]);
+                delimiters.splice(i + 1, 1);
+            }
+        }
+    }
 }
 
 
@@ -376,14 +391,14 @@ function delimiterValidator(components, delimiters) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(13);
 
 
 
 
 ((global, Selector) => {
     if (typeof define === "function" &&
-        __webpack_require__(14)) {
+        __webpack_require__(15)) {
         define(() => {
             global.Selector = Selector;
             return global.Selector;
@@ -497,6 +512,8 @@ class Selector {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_dequote__ = __webpack_require__(12);
+
 
 
 
@@ -566,7 +583,7 @@ function selector(string) {
                     // Then there is only the attribute.
                     attr.has.push(first);
                 } else {
-                    join = split.slice(1).join("=");
+                    join = Object(__WEBPACK_IMPORTED_MODULE_5__util_dequote__["a" /* default */])(split.slice(1).join("="));
                     lastCharacter = first.charAt(first.length - 1);
                     sub = first.substring(0, first.length - 1);
 
@@ -578,13 +595,11 @@ function selector(string) {
                     }
 
                     else if (lastCharacter.match(/^\~$/)) {
-                        if (!attr.matchSpaces[sub])
-                            attr.matchSpaces[sub] = join;
+                        attr.matchSpaces[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\|$/)) {
-                        if (!attr.matchDashes[sub])
-                            attr.matchDashes[sub] = join;
+                        attr.matchDashes[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {
@@ -777,6 +792,23 @@ function deepMergeArray(target, ...sources) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (string) {
+    // Strip quotes if and only if the string is encased in quotes.
+    let str = string.trim();
+
+    if (str.match(/^\".*\"$/))
+        return str.substring(1, str.length - 1);
+
+    return string;
+});
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
 
@@ -785,10 +817,10 @@ const glob = window || global || this || null; // Eh, just use this
 
 /* harmony default export */ __webpack_exports__["a"] = (glob);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(14)))
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 var g;
@@ -815,7 +847,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
