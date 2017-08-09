@@ -33,7 +33,7 @@ export default function splitter(string, reg) {
         // Check previous entry, to see if the delimiting character was
         // escaped. If so, put it back.
         if (splitted[i - 1].endsWith("\\") ||
-            (delimiter.match(/\~/) && splitted[i].startsWith("="))) {
+            (delimiter.match(/^\~$/) && splitted[i].startsWith("="))) {
             splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - (splitted[i - 1].endsWith("\\") ? 1 : 0)) + delimiter + splitted[i]);
             i--;
         } else {
@@ -54,8 +54,8 @@ function fixAttributes(components, delimiters) {
     let i = 0;
 
     for (; i < delimiters.length; i++) {
-        if (delimiters[i].match(/\[/)) {
-            while (!delimiters[i + 1].match(/\]/) && i + 1 < delimiters.length) {
+        if (delimiters[i].match(/^\[$/)) {
+            while (!delimiters[i + 1].match(/^\]$/) && i + 1 < delimiters.length) {
                 components.splice(i + 1, 2, components[i + 1] + delimiters[i + 1] + components[i + 2]);
                 delimiters.splice(i + 1, 1);
             }

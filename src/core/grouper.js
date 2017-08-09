@@ -29,7 +29,7 @@ import * as regex from "../util/regex";
             }
 
             return tree;
-         }),
-         delimiters: components.delimiters
+        }).reverse(),
+         delimiters: components.delimiters.reverse()
      };
  }
