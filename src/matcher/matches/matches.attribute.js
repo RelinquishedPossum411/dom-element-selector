@@ -1,24 +1,16 @@
 
+import { isSubsetObject as check } from "../uitl/isSubset";
+
 /**
  * matches.attribute.js
  * [attribute=value].
  */
 export default function (element, attributeMatchesObject) {
-    // element.attributes
-    // Check that all attributes to match are present in the element.
-    let matched = 0;
+    // NamedNodeMap does not have a method to verify the existence of
+    // an item, so use our subset checker.
 
-    for (const attribute in attributeMatchesObject) {
-        // NamedNodeMap does not have a method to verify the existence of
-        // an item.
-        for (const attr of element.attributes) {
-            if (attribute === attr.name &&
-                attributeMatchesObject[attribute] === attr.value) {
-                matched++;
-                break;
-            }
-        }
-    }
-
-    return matched === attributeMatchesObject.length;
+    // Use our subset checker to check for a subset relationship.
+    return check(attributeMatchesObject, element.attributes, (a, b, c, d) => {
+        return d.name === a && d.value === b;
+    });
 }
