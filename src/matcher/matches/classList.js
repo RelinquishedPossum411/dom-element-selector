@@ -1,16 +1,12 @@
 
 /**
- * Checks if an element's classList strictly contains all the classes in the
+ * Checks if an element's classList contains all the classes in the
  * search criteria.
  */
 export default function (element, classListArray) {
-    if (element.classList.length !== classListArray.length)
-        return false;
-
-    for (const cl of element.classList) {
-        if (!classListArray.includes(cl))
+    for (const cl of classListArray)
+        if (!element.classList.contains(cl))
             return false;
-    }
 
     return true;
 }
