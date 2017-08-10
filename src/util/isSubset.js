@@ -13,18 +13,64 @@
 export default function (arr1, arr2, fn, proper) {
     let i = 0;
 
-    for (const a in arr1) {
-        for (const b in arr2) {
+    const   hasOwn = Object.prototype.hasOwnProperty,
+            keys1 = Object.keys(arr1),
+            keys2 = Object.keys(arr2);
+
+    if (keys1.length > keys2.length)
+        return false;
+
+    for (const a of keys1) {
+        if (!keys2.includes(a))
+            return false;
+
+        for (const b of keys2) {
+            if (!(hasOwn.call(arr1, a) && hasOwn.call(arr2, b)))
+                continue;
+
             if ((fn && fn(arr1[a], arr2[b])) || arr1[a] === arr2[b])
                 break;
 
             i++;
         }
 
-        if ((proper && i >= arr2.length) ||
-            (i > arr2.length))
+        if ((proper && i >= keys2.length) ||
+            (i > keys2.length))
             return false;
     }
 
     return true;
+}
+
+export function isSubsetObject(obj1, obj2, fn, proper) {
+    let i = 0;
+
+    const   keys1 = Object.keys(obj1),
+            keys2 = Object.keys(obj2);
+
+    if (keys1.length > keys2.length)
+        return false;
+
+    for (const item of keys1) {
+        if (fn) {
+            for (const that of keys2) {
+                if (fn(item, obj1[item], that, obj2[that]))
+                    break;
+
+                i++;
+            }
+
+            // Did not find an entry in obj1 in obj2.
+            if (i >= keys2.length)
+                return false;
+        } else {
+            if (!keys2.includes(item))
+                return false;
+
+            if (obj1[item] !== obj2[item])
+                return false;
+        }
+    }
+
+    return proper ? keys1.length < keys2.length : true;
 }
