@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = grouper;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__splitter__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_logger__ = __webpack_require__(3);
@@ -126,8 +126,8 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
             }
 
             return tree;
-         }),
-         delimiters: components.delimiters
+        }).reverse(),
+         delimiters: components.delimiters.reverse()
      };
  }
 
@@ -175,7 +175,7 @@ function splitter(string, reg) {
         // Check previous entry, to see if the delimiting character was
         // escaped. If so, put it back.
         if (splitted[i - 1].endsWith("\\") ||
-            (delimiter.match(/\~/) && splitted[i].startsWith("="))) {
+            (delimiter.match(/^\~$/) && splitted[i].startsWith("="))) {
             splitted.splice(i - 1, 2, splitted[i - 1].substring(0, splitted[i - 1].length - (splitted[i - 1].endsWith("\\") ? 1 : 0)) + delimiter + splitted[i]);
             i--;
         } else {
@@ -196,8 +196,8 @@ function fixAttributes(components, delimiters) {
     let i = 0;
 
     for (; i < delimiters.length; i++) {
-        if (delimiters[i].match(/\[/)) {
-            while (!delimiters[i + 1].match(/\]/) && i + 1 < delimiters.length) {
+        if (delimiters[i].match(/^\[$/)) {
+            while (!delimiters[i + 1].match(/^\]$/) && i + 1 < delimiters.length) {
                 components.splice(i + 1, 2, components[i + 1] + delimiters[i + 1] + components[i + 2]);
                 delimiters.splice(i + 1, 1);
             }
@@ -382,129 +382,18 @@ function delimiterValidator(components, delimiters) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(14);
+/* WEBPACK VAR INJECTION */(function(global) {
 
 
+const win = window || this || null;
+const glob = window || global || this || null; // Eh, just use this
 
+/* harmony default export */ __webpack_exports__["a"] = (glob);
 
-((global, Selector) => {
-    if (typeof define === "function" &&
-        __webpack_require__(16)) {
-        define(() => {
-            global.Selector = Selector;
-            return global.Selector;
-        });
-    } else if (typeof exports === "object") {
-        module.exports = Selector;
-    } else {
-        global.Selector = Selector;
-    }
-})(__WEBPACK_IMPORTED_MODULE_1__util_globals__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__core__["a" /* default */]);
-
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(18)))
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-module.exports = function(originalModule) {
-	if(!originalModule.webpackPolyfill) {
-		var module = Object.create(originalModule);
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		Object.defineProperty(module, "exports", {
-			enumerable: true,
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(8);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__core_core__["a"]; });
-
-
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tree__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__grouper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_logger__ = __webpack_require__(3);
-
-
-
-
-
-
-
-class Selector {
-    static tree(string) {
-        try {
-            return Object(__WEBPACK_IMPORTED_MODULE_0__tree__["a" /* default */])(string);
-        } catch (exception) {
-            console.error("[Selector] Parsing error occurred when executing tree(): " + exception);
-        }
-    }
-
-    static select(string, pipeToConsole) {
-        try {
-            return Object(__WEBPACK_IMPORTED_MODULE_1__grouper__["a" /* default */])(string);
-        } catch (exception) {
-            console.error("[Selector] Parsing error:\n" + exception);
-        }
-
-        if (pipeToConsole)
-            this.getLastLog().toConsole();
-    }
-
-
-    static getLastLog() {
-        return __WEBPACK_IMPORTED_MODULE_4__util_logger__["a" /* default */].getLogger("selector");
-    }
-
-    // TODO: remove - debugging only.
-    static substringer(string, regex) {
-        return Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string, regex);
-    }
-
-    static tidy(components, delimiters) {
-        Object(__WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__["a" /* default */])(components, delimiters);
-
-        return [components, delimiters];
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = Selector;
-
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -575,17 +464,262 @@ class Selector {
 
 
 /***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = isSubsetObject;
+
+/**
+ * Evaluates whether the first array is a subset of the second.
+ * If the method is called with a callback function as the last parameter, then
+ * the a subset relationship is determined by the result of the callback.
+ *
+ * @param arr1 - array to check for a subset relationship.
+ * @param arr2 - array to check for a superset relationship.
+ * @param fn - a callback function to evaluate the values between the arrays.
+ * @param proper - checks for a strictly proper-subset relationship.
+ * @return whether there is a subset/superset relationship between the arrays.
+ */
+/* unused harmony default export */ var _unused_webpack_default_export = (function (arr1, arr2, fn, proper) {
+    let i = 0;
+
+    const   hasOwn = Object.prototype.hasOwnProperty,
+            keys1 = Object.keys(arr1),
+            keys2 = Object.keys(arr2);
+
+    if (keys1.length > keys2.length)
+        return false;
+
+    for (const a of keys1) {
+        if (!keys2.includes(a))
+            return false;
+
+        for (const b of keys2) {
+            if (!(hasOwn.call(arr1, a) && hasOwn.call(arr2, b)))
+                continue;
+
+            if ((fn && fn(arr1[a], arr2[b])) || arr1[a] === arr2[b])
+                break;
+
+            i++;
+        }
+
+        if ((proper && i >= keys2.length) ||
+            (i > keys2.length))
+            return false;
+    }
+
+    return true;
+});
+
+function isSubsetObject(obj1, obj2, fn, proper) {
+    let i = 0;
+
+    const   keys1 = Object.keys(obj1),
+            keys2 = Object.keys(obj2);
+
+    if (keys1.length > keys2.length)
+        return false;
+
+    for (const item of keys1) {
+        if (fn) {
+            for (const that of keys2) {
+                if (fn(item, obj1[item], that, obj2[that]))
+                    break;
+
+                i++;
+            }
+
+            // Did not find an entry in obj1 in obj2.
+            if (i >= keys2.length)
+                return false;
+        } else {
+            if (!keys2.includes(item))
+                return false;
+
+            if (obj1[item] !== obj2[item])
+                return false;
+        }
+    }
+
+    return proper ? keys1.length < keys2.length : true;
+}
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(5);
+
+
+
+
+((global, Selector) => {
+    if (typeof define === "function" &&
+        __webpack_require__(26)) {
+        define(() => {
+            global.Selector = Selector;
+            return global.Selector;
+        });
+    } else if (typeof exports === "object") {
+        module.exports = Selector;
+    } else {
+        global.Selector = Selector;
+    }
+})(__WEBPACK_IMPORTED_MODULE_1__util_globals__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__core__["a" /* default */]);
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(9)(module)))
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = function(originalModule) {
+	if(!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true,
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
 /* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(11);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__core_core__["a"]; });
+
+
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matcher_matcher__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tree__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__grouper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__splitter__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_delimiterClean__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_logger__ = __webpack_require__(3);
+
+
+
+
+
+
+
+
+class Selector {
+    static match(string) {
+        return Object(__WEBPACK_IMPORTED_MODULE_0__matcher_matcher__["a" /* default */])(string);
+    }
+
+    static tree(string) {
+        try {
+            return Object(__WEBPACK_IMPORTED_MODULE_1__tree__["a" /* default */])(string);
+        } catch (exception) {
+            console.error("[Selector] Parsing error occurred when executing tree(): " + exception);
+        }
+    }
+
+    static select(string, pipeToConsole) {
+        try {
+            return Object(__WEBPACK_IMPORTED_MODULE_2__grouper__["a" /* default */])(string);
+        } catch (exception) {
+            console.error("[Selector] Parsing error:\n" + exception);
+        }
+
+        if (pipeToConsole)
+            this.getLastLog().toConsole();
+    }
+
+
+    static getLastLog() {
+        return __WEBPACK_IMPORTED_MODULE_5__util_logger__["a" /* default */].getLogger("selector");
+    }
+
+    // TODO: remove - debugging only.
+    static substringer(string, regex) {
+        return Object(__WEBPACK_IMPORTED_MODULE_3__splitter__["a" /* default */])(string, regex);
+    }
+
+    static tidy(components, delimiters) {
+        Object(__WEBPACK_IMPORTED_MODULE_4__util_delimiterClean__["a" /* default */])(components, delimiters);
+
+        return [components, delimiters];
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Selector;
+
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_tree__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__searcher__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_globals__ = __webpack_require__(5);
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = (function (string) {
+    // Call our makeTree function to build a relationship between the elements
+    // we are trying to look for in the DOM.
+    const   tree = Object(__WEBPACK_IMPORTED_MODULE_0__core_tree__["a" /* default */])(string),
+            doc = __WEBPACK_IMPORTED_MODULE_2__util_globals__["a" /* default */].document;
+
+    const   result = tree.map(t => {
+        console.log("Indiv:");
+        console.log(t);
+        return Object(__WEBPACK_IMPORTED_MODULE_1__searcher__["a" /* default */])(doc, t, []);
+    });
+
+    return result;
+});
+
+
+/***/ }),
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = selector;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_dequote__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_dequote__ = __webpack_require__(16);
 
 
 
@@ -701,11 +835,11 @@ function selector(string) {
 
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_deepCopy__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_deepCopy__ = __webpack_require__(15);
 
 
 
@@ -765,7 +899,7 @@ let parsed = {
 
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -872,7 +1006,7 @@ function deepMergeArray(target, ...sources) {
 
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -889,22 +1023,110 @@ function deepMergeArray(target, ...sources) {
 
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
+/* harmony export (immutable) */ __webpack_exports__["a"] = searcher;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_globals__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__matches_matches__ = __webpack_require__(20);
 
 
-const win = window || this || null;
-const glob = window || global || this || null; // Eh, just use this
 
-/* harmony default export */ __webpack_exports__["a"] = (glob);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(15)))
+
+/**
+ * Searches for
+ */
+function searcher(root, search, selected) {
+    for (const child of root.children) {
+        // Only check the properties that are in the search criteria.
+        // Ignore them if they are omitted; assume they match.
+        let str,
+            matched = 0;
+
+        console.log("Checking " + child);
+        console.log("Tree: ");
+        console.log(search);
+
+        const routine = buildSearchRoutine(search);
+
+        console.log("Routine:");
+        console.log(routine);
+
+        for (const instruction of routine) {
+            console.log("Checking instruction " + instruction + " with " + child);
+            console.log(instruction);
+            console.log(child);
+
+            str = "match" + instruction.formatted;
+
+            if (__WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */][str] && __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */][str](child, instruction.value))
+                matched++;
+        }
+
+        // Add to selected.
+        if (matched === routine.length)
+            selected.push(child);
+
+        // Recurse to search all children.
+        searcher(child, search, selected);
+    }
+
+    return selected;
+}
+
+/**
+ * Breaks down a search tree to the individual criteria to search for in
+ * the DOM.
+ */
+function buildSearchRoutine(search) {
+    let searches = [];
+
+    for (const term of Object.keys(search)) {
+        /*console.log("Term " + term);
+        console.log(search[term]);
+        console.log(!!search[term]);*/
+        if (!search[term] || Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__["a" /* default */])(search[term]))
+            continue;
+
+        if (Object.prototype.toString.call(search[term]) === "[object Object]" &&
+            term === "attributes") {
+            for (const a of Object.keys(search[term])) {
+                if (!search[term][a] || Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__["a" /* default */])(search[term][a]))
+                    continue;
+
+                searches.push({
+                    depth: search[term],
+                    property: a,
+                    value: search[term][a],
+                    formatted: format(term) + format(a)
+                });
+            }
+        } else {
+            searches.push({
+                depth: search,
+                property: term,
+                value: search[term],
+                formatted: format(term)
+            });
+        }
+    }
+
+    return searches;
+}
+
+/**
+ * Formats an attribute string so that we can work with it.
+ */
+function format(string) {
+    return string.split(/[-_]+/).map(v => v ? v.charAt(0).toUpperCase() + (v.length > 1 ? v.substring(1) : "") : "").join("");
+}
+
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports) {
 
 var g;
@@ -931,7 +1153,133 @@ module.exports = g;
 
 
 /***/ }),
-/* 16 */
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (object) {
+    return  (object.constructor === [].constructor || object.constructor === {}.constructor) &&
+            Object.keys(object).length === 0;
+});
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classList__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__id__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tag__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__matches_attribute__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__contains_attribute__ = __webpack_require__(25);
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    matchId: __WEBPACK_IMPORTED_MODULE_1__id__["a" /* default */],
+    matchTag: __WEBPACK_IMPORTED_MODULE_2__tag__["a" /* default */],
+    matchClass: __WEBPACK_IMPORTED_MODULE_0__classList__["a" /* default */],
+    matchAttributeMatches: __WEBPACK_IMPORTED_MODULE_3__matches_attribute__["a" /* default */],
+    matchAttributeContains: __WEBPACK_IMPORTED_MODULE_4__contains_attribute__["a" /* default */]
+});
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/**
+ * Checks if an element's classList contains all the classes in the
+ * search criteria.
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (element, classListArray) {
+    for (const cl of classListArray)
+        if (!element.classList.contains(cl))
+            return false;
+
+    return true;
+});
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (element, id) {
+    return element.id === id;
+});
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (element, tag) {
+    console.log("checking tag");
+
+    return element.tagName.toLowerCase() === tag.toLowerCase();
+});
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_isSubset__ = __webpack_require__(7);
+
+
+
+/**
+ * matches.attribute.js
+ * [attribute=value].
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (element, attributeMatchesObject) {
+    // NamedNodeMap does not have a method to verify the existence of
+    // an item, so use our subset checker.
+
+    // Use our subset checker to check for a subset relationship.
+    return Object(__WEBPACK_IMPORTED_MODULE_0__util_isSubset__["a" /* isSubsetObject */])(attributeMatchesObject, element.attributes, (a, b, c, d) => {
+        return d.name === a && d.value === b;
+    });
+});
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_isSubset__ = __webpack_require__(7);
+
+
+
+/**
+ * contains.attribute.js
+ * [attribute*=value]
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (element, attributeContainsObject) {
+    // Use the subset checker tool.
+    return Object(__WEBPACK_IMPORTED_MODULE_0__util_isSubset__["a" /* isSubsetObject */])(attributeContainsObject, element.attributes, (a, b, c, d) => {
+        return d.name === a && d.value.indexOf(b) !== -1;
+    });
+});
+
+
+/***/ }),
+/* 26 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
