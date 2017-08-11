@@ -4,7 +4,15 @@ import isEmptyObject from "../util/tools/isEmptyObject";
 import matches from "./matches/matches";
 
 /**
- * Searches for
+ * Starting from a root element, the method recursively attempts to match
+ * all match criteria from the buildSearchRoutine method. Performs a pre-order
+ * traversal of the DOM sub-tree with the root at some element in the DOM.
+ *
+ * @param root - the starting point of the search.
+ * @param search - a search tree derived from "../core/parsed.js".
+ * @param selected - an array to store selected elements.
+ *
+ * @return returns @param selected.
  */
 export default function searcher(root, search, selected) {
     for (const child of root.children) {

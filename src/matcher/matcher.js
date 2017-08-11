@@ -1,6 +1,7 @@
 
 import makeTree from "../core/tree";
 import searcher from "./searcher";
+import flatten from "../util/tools/flatten";
 import global from "../util/globals";
 
 export default function (string) {
@@ -9,11 +10,9 @@ export default function (string) {
     const   tree = makeTree(string),
             doc = global.document;
 
-    const   result = tree.map(t => {
+    return flatten(tree.map(t => {
         console.log("Indiv:");
         console.log(t);
         return searcher(doc, t, []);
-    });
-
-    return result;
+    }), 1);
 }
