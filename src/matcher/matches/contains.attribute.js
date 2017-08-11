@@ -1,5 +1,5 @@
 
-import { isSubsetObject as check } from "../util/isSubset";
+import { isSubsetObject as check } from "../../util/isSubset";
 
 /**
  * contains.attribute.js

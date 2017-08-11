@@ -1,4 +1,5 @@
 
+import matcher from "../matcher/matcher";
 import makeTree from "./tree";
 import grouper from "./grouper";
 import splitter from "./splitter";
@@ -6,6 +7,10 @@ import tidyer from "../util/delimiterClean";
 import Logger from "../util/logger";
 
 export default class Selector {
+    static match(string) {
+        return matcher(string);
+    }
+
     static tree(string) {
         try {
             return makeTree(string);
