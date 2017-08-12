@@ -1,6 +1,6 @@
 
 import makeTree from "../core/tree";
-import searcher from "./searcher";
+import searcher from "./core/searcher";
 import flatten from "../util/tools/flatten";
 import global from "../util/globals";
 
