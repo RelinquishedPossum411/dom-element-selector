@@ -1,7 +1,7 @@
 
-import buildSearchRoutine from "./core/buildSearchRoutine";
-import global from "../util/globals";
-import matches from "./matches/matches";
+import Routine from "./searchRoutine";
+import global from "../../util/globals";
+import matches from "../matches/matches";
 
 /**
  * Starting from a root element, the method recursively attempts to match
@@ -21,16 +21,14 @@ export default function searcher(root, search, depthSearch, selected) {
         for (const child of root.children) {
             // Only check the properties that are in the search criteria.
             // Ignore them if they are omitted; assume they match.
-            let str,
-                matched = 0;
 
             console.log("Checking " + child);
             console.log("Tree: ");
             console.log(search);
 
-            const routine = buildSearchRoutine(search);
+            const routine = new Routine(search);
 
-            if (runRoutine(child, routine, matches))
+            if (routine.run(child, matches))
                 selected.push(child);
 
             // Recurse to search all children.
@@ -39,19 +37,7 @@ export default function searcher(root, search, depthSearch, selected) {
 
         return selected;
     }
-}
 
+    // If depthSearch is false, then just check if the root matches the routine.
 
-function runRoutine(element, routine, namespace) {
-    let str,
-        matched = 0;
-
-    for (const instruction of routine) {
-        str = "match" + instruction.formatted;
-
-        if (namespace[str] && namespace[str](element, instruction.value))
-            matched++;
-    }
-
-    return matched === routine.length;
 }
