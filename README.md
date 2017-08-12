@@ -15,7 +15,7 @@ import Selector from "dom-element-selector";
 ```
 
 All relevant functions are packaged in the exported ```Selector``` class.
-* ```Selector.match()``` returns all matched elements with the specified query/selector conveniently
+* ```Selector.match()``` returns all matched elements of the specified query/selector conveniently in an array.
 * ```Selector.tree()``` returns the search tree of the parsed string as an object literal.
 
 ## Examples
@@ -36,13 +36,14 @@ A sample HTML snippet:
 
 ### JavaScript
 Using ```Selector``` to match elements in the snippet:
-**Tags**
+
+#### Tags
 ```javascript
 // Returns an array of elements: [div.flex, div#content]
 Selector.match("div");
 ```
 
-**Classes and IDs**
+#### Classes and IDs
 ```javascript
 // Only one element is matched:
 // [div.flex]
@@ -54,21 +55,24 @@ Selector.match("div#content");
 Selector.match("#content");
 ```
 
-**Ancestor and Descendant Relationships**
+#### Ancestor and Descendant Relationships
 ```javascript
 // Matches a bold element that is a descendant of a div element.
 // [b] (<b>text</b>)
 Selector.match("div b");
 ```
 
-**Parent and Child Relationships**
+#### Parent and Child Relationships
 ```javascript
 // Matches nothing since we seek an immediate bold element as a child of a div element.
 // []
 Selector.match("div > b");
+
+// Matches the span element with id "main" because it is a direct descendant of a div element.
+Selector.match("div > span");
 ```
 
-**Attributes**
+#### Attributes
 ```javascript
 // Matches all elements with an "id" attribute.
 // [div#content, span#main]
@@ -77,11 +81,16 @@ Selector.match("[id]");
 // Matches a form element with method POST.
 Selector.match("form[method=post]");
 
-// Matches a form element with an attribute "data" that has a substring of
-// "some data" in its value.
-// NOTE: characters like spaces must be escaped with a double backslash "\\"
+// Matches a form element with an attribute "data" that has a substring "some data" in its value.
+// NOTE: characters like spaces must be escaped with double backslashes "\\"
 // SEE: Notable Issues section for more information.
-Selector.match("form[data~=some\\ data]");
+Selector.match("form[data*=some\\ data]");
+
+// More attribute selectors:
+Selector.match("[attribute|=value]");
+Selector.match("[attribute^=value]");
+Selector.match("[attribute$=value]");
+Selector.match("[attribute~=value]");
 ```
 
 
@@ -94,6 +103,7 @@ Selector.match("form[data~=some\\ data]");
 
 ## Features to be Implemented
 
+* **All Elements Selector**: Select all elements using the ```*``` selector.
 * **Traverser Function**: A traverser function will be implemented that goes through the DOM tree to match all DOM elements that fulfill the conditions in the syntax tree.
 * **Result**: A function that will return all the matched elements in the DOM.
 
