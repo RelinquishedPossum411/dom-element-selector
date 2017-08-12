@@ -39,5 +39,5 @@ export default function searcher(root, search, depthSearch, selected) {
     }
 
     // If depthSearch is false, then just check if the root matches the routine.
-
+    return new Routine(search).run(root, matches);
 }
