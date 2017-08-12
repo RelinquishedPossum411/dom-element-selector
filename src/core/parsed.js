@@ -41,10 +41,10 @@ let parsed = {
         matchDashes: {},
 
         // [attribute^=match]
-        startsWith: null,
+        startsWith: {},
 
         // [attribute$=match]
-        endsWith: null,
+        endsWith: {},
 
         // [attribute]
         has: []

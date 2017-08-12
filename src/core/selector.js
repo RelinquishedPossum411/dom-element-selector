@@ -88,12 +88,12 @@ export default function selector(string) {
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {
-                        if (!attr.startsWith)
+                        if (!attr.startsWith[sub])
                             attr.startsWith = join;
                     }
 
                     else if (lastCharacter.match(/^\$$/)) {
-                        if (!attr.endsWith)
+                        if (!attr.endsWith[sub])
                             attr.endsWith = join;
                     }
 
