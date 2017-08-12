@@ -1,6 +1,6 @@
 # A DOM Element Selector
 
-An attempt at something similar to the CSS element selectors or the JavaScript ```window.querySelector()``` method.
+An attempt at something similar to the CSS element selectors and the JavaScript ```window.querySelector()``` method.
 
 ## Design
 
@@ -9,8 +9,80 @@ A string fed into the selector is broken down into one or main parts and then pa
 
 ## Usage
 
+Be sure to import the ```Selector``` namespace:
+```javascript
+import Selector from "dom-element-selector";
+```
+
 All relevant functions are packaged in the exported ```Selector``` class.
-* ```Selector.tree()``` returns the parsed string as an object literal.
+* ```Selector.match()``` returns all matched elements with the specified query/selector conveniently
+* ```Selector.tree()``` returns the search tree of the parsed string as an object literal.
+
+## Examples
+A list of examples of the usage of all supported queries and selectors.
+
+### HTML
+A sample HTML snippet:
+```html
+<div class="flex responsive">
+</div>
+<div id="content">
+	<span id="main">Some span <b>text</b>!</span>
+	<p>More text.</p>
+
+	<form data="some data!" more-data="" method="post"></form>
+</div>
+```
+
+### JavaScript
+Using ```Selector``` to match elements in the snippet:
+**Tags**
+```javascript
+// Returns an array of elements: [div.flex, div#content]
+Selector.match("div");
+```
+
+**Classes and IDs**
+```javascript
+// Only one element is matched:
+// [div.flex]
+Selector.match("div.flex");
+
+// Both of these will match the same result, for IDs are unique.
+// [div#content]
+Selector.match("div#content");
+Selector.match("#content");
+```
+
+**Ancestor and Descendant Relationships**
+```javascript
+// Matches a bold element that is a descendant of a div element.
+// [b] (<b>text</b>)
+Selector.match("div b");
+```
+
+**Parent and Child Relationships**
+```javascript
+// Matches nothing since we seek an immediate bold element as a child of a div element.
+// []
+Selector.match("div > b");
+```
+
+**Attributes**
+```javascript
+// Matches all elements with an "id" attribute.
+// [div#content, span#main]
+Selector.match("[id]");
+
+// Matches a form element with method POST.
+Selector.match("form[method=post]");
+
+// Matches a form element with an attribute "data" that has a substring of
+// "some data" in its value.
+// NOTE: characters like spaces must be escaped with a double backslash "\\"
+// SEE: Notable Issues section for more information.
+Selector.match("form[data~=some\\ data]");
+```
 
 
 ## Implementation and Features
@@ -28,7 +100,7 @@ All relevant functions are packaged in the exported ```Selector``` class.
 
 ## Notable Issues
 
-* When using an attribute selector like ```[attribute=content]```, the following characters must be escaped with ```\\```:
+* When using an attribute selector like ```[attribute=content]```, the following characters must be escaped with an escaped backslash, ```\\```:
   * ```,```, ```~```, ```~```, ```+``` and ``` ``` (whitespace).
 ```javascript
 // Correct usage:
