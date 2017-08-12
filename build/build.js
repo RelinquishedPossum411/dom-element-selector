@@ -390,7 +390,7 @@ const glob = window || global || this || null; // Eh, just use this
 
 /* harmony default export */ __webpack_exports__["a"] = (glob);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(18)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(21)))
 
 /***/ }),
 /* 6 */
@@ -561,7 +561,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 ((global, Selector) => {
     if (typeof define === "function" &&
-        __webpack_require__(26)) {
+        __webpack_require__(29)) {
         define(() => {
             global.Selector = Selector;
             return global.Selector;
@@ -685,8 +685,10 @@ class Selector {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_tree__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__searcher__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_globals__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_searcher__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_tools_flatten__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_globals__ = __webpack_require__(5);
+
 
 
 
@@ -696,15 +698,13 @@ class Selector {
     // Call our makeTree function to build a relationship between the elements
     // we are trying to look for in the DOM.
     const   tree = Object(__WEBPACK_IMPORTED_MODULE_0__core_tree__["a" /* default */])(string),
-            doc = __WEBPACK_IMPORTED_MODULE_2__util_globals__["a" /* default */].document;
+            doc = __WEBPACK_IMPORTED_MODULE_3__util_globals__["a" /* default */].document;
 
-    const   result = tree.map(t => {
+    return Object(__WEBPACK_IMPORTED_MODULE_2__util_tools_flatten__["a" /* default */])(tree.map(t => {
         console.log("Indiv:");
         console.log(t);
-        return Object(__WEBPACK_IMPORTED_MODULE_1__searcher__["a" /* default */])(doc, t, []);
-    });
-
-    return result;
+        return Object(__WEBPACK_IMPORTED_MODULE_1__core_searcher__["a" /* default */])(doc, t, true, []);
+    }), 1);
 });
 
 
@@ -1028,76 +1028,117 @@ function deepMergeArray(target, ...sources) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = searcher;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_globals__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__matches_matches__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__searchRoutine__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__matches_matches__ = __webpack_require__(22);
 
 
 
 
 
 /**
- * Searches for
+ * Starting from a root element, the method recursively attempts to match
+ * all match criteria from the buildSearchRoutine method. Performs a pre-order
+ * traversal of the DOM sub-tree with the root at some element in the DOM.
+ *
+ * @param root - the starting point of the search.
+ * @param search - a search tree derived from "../core/parsed.js".
+ * @param depthSearch - if false, returns whether the root matches the search
+ *                      tree.
+ * @param selected - an array to store selected elements.
+ *
+ * @return returns @param selected.
  */
-function searcher(root, search, selected) {
-    for (const child of root.children) {
-        // Only check the properties that are in the search criteria.
-        // Ignore them if they are omitted; assume they match.
+function searcher(root, search, depthSearch, selected) {
+    if (depthSearch) {
+        for (const child of root.children) {
+            // Only check the properties that are in the search criteria.
+            // Ignore them if they are omitted; assume they match.
+
+            console.log("Checking " + child);
+            console.log("Tree: ");
+            console.log(search);
+
+            const routine = new __WEBPACK_IMPORTED_MODULE_0__searchRoutine__["a" /* default */](search);
+
+            if (routine.run(child, __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */]))
+                selected.push(child);
+
+            // Recurse to search all children.
+            searcher(child, search, depthSearch, selected);
+        }
+
+        return selected;
+    }
+
+    // If depthSearch is false, then just check if the root matches the routine.
+    return new __WEBPACK_IMPORTED_MODULE_0__searchRoutine__["a" /* default */](search).run(root, __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */]);
+}
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__buildSearchRoutine__ = __webpack_require__(19);
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = (class {
+    constructor(searchTree) {
+        this.routine = Object(__WEBPACK_IMPORTED_MODULE_0__buildSearchRoutine__["a" /* default */])(searchTree);
+    }
+
+    run(element, functionNamespace) {
+        if (!this.routine)
+            return;
+
         let str,
             matched = 0;
 
-        console.log("Checking " + child);
-        console.log("Tree: ");
-        console.log(search);
-
-        const routine = buildSearchRoutine(search);
-
-        console.log("Routine:");
-        console.log(routine);
-
-        for (const instruction of routine) {
-            console.log("Checking instruction " + instruction + " with " + child);
-            console.log(instruction);
-            console.log(child);
-
+        for (const instruction of this.routine) {
             str = "match" + instruction.formatted;
 
-            if (__WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */][str] && __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */][str](child, instruction.value))
+            if (functionNamespace[str] && functionNamespace[str](element, instruction.value))
                 matched++;
         }
 
-        // Add to selected.
-        if (matched === routine.length)
-            selected.push(child);
-
-        // Recurse to search all children.
-        searcher(child, search, selected);
+        return matched === this.routine.length;
     }
+});
 
-    return selected;
-}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_tools_isEmptyObject__ = __webpack_require__(20);
+
+
 
 /**
  * Breaks down a search tree to the individual criteria to search for in
  * the DOM.
  */
-function buildSearchRoutine(search) {
-    let searches = [];
+/* harmony default export */ __webpack_exports__["a"] = (function (search) {
+    let routine = [];
 
     for (const term of Object.keys(search)) {
         /*console.log("Term " + term);
         console.log(search[term]);
         console.log(!!search[term]);*/
-        if (!search[term] || Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__["a" /* default */])(search[term]))
+        if (!search[term] || Object(__WEBPACK_IMPORTED_MODULE_0__util_tools_isEmptyObject__["a" /* default */])(search[term]))
             continue;
 
         if (Object.prototype.toString.call(search[term]) === "[object Object]" &&
             term === "attributes") {
             for (const a of Object.keys(search[term])) {
-                if (!search[term][a] || Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_isEmptyObject__["a" /* default */])(search[term][a]))
+                if (!search[term][a] || Object(__WEBPACK_IMPORTED_MODULE_0__util_tools_isEmptyObject__["a" /* default */])(search[term][a]))
                     continue;
 
-                searches.push({
+                routine.push({
                     depth: search[term],
                     property: a,
                     value: search[term][a],
@@ -1105,7 +1146,7 @@ function buildSearchRoutine(search) {
                 });
             }
         } else {
-            searches.push({
+            routine.push({
                 depth: search,
                 property: term,
                 value: search[term],
@@ -1114,8 +1155,8 @@ function buildSearchRoutine(search) {
         }
     }
 
-    return searches;
-}
+    return routine;
+});
 
 /**
  * Formats an attribute string so that we can work with it.
@@ -1126,7 +1167,19 @@ function format(string) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (object) {
+    return  (object.constructor === [].constructor || object.constructor === {}.constructor) &&
+            Object.keys(object).length === 0;
+});
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1153,27 +1206,15 @@ module.exports = g;
 
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-/* harmony default export */ __webpack_exports__["a"] = (function (object) {
-    return  (object.constructor === [].constructor || object.constructor === {}.constructor) &&
-            Object.keys(object).length === 0;
-});
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classList__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__id__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tag__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__matches_attribute__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__contains_attribute__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classList__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__id__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tag__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__matches_attribute__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__contains_attribute__ = __webpack_require__(27);
 
 
 
@@ -1191,7 +1232,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1210,7 +1251,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1221,7 +1262,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1234,7 +1275,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1258,7 +1299,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1279,7 +1320,37 @@ module.exports = g;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/**
+ * 'Flattens' an array.
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (array, depth) {
+    return flatten(array, depth, 0);
+});
+
+function flatten(array, depth = 0, currentDepth = 0) {
+    if (depth && depth !== 0, currentDepth > depth)
+        return array;
+
+    if (array.length === 1)
+        return isArray(array[0]) ? flatten(array[0], depth, currentDepth + 1) : array;
+
+    return  isArray(array[0]) ?
+            flatten(array[0], depth, currentDepth + 1).concat(flatten(array.slice(1), depth, currentDepth + 1)) :
+            [array[0]].concat(flatten(array.slice(1), depth, currentDepth + 1));
+}
+
+function isArray(array) {
+    return Object.prototype.toString.call(array) === "[object Array]";
+}
+
+
+/***/ }),
+/* 29 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */

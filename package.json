@@ -2,12 +2,13 @@
   "name": "dom-element-selector",
   "version": "0.0.1",
   "description": "a tool for targeting and selecting a set of DOM elements based on a single-line string that uses the conventions and rules specified by W3C CSS",
-  "main": "index.js",
+  "main": "src/core.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "webpack"
+    "test": "webpack",
+    "p": "webpack -p"
   },
   "author": "Benjamin Huang",
   "license": "MIT",
