@@ -2,13 +2,21 @@
 import matchClassList from "./classList";
 import matchId from "./id";
 import matchTag from "./tag";
-import matchAttributeMatches from "./matches.attribute";
-import matchAttributeContains from "./contains.attribute";
+import attributeMatches from "./matches.attribute";
+import attributeContains from "./contains.attribute";
+import attributeStartsWith from "./startsWith.attribute";
+import attributeEndsWith from "./endsWith.attribute";
+import attributeSpaces from "./spaces.attribute";
+import attributeDashes from "./dashes.attribute";
 
 export default {
     matchId: matchId,
     matchTag: matchTag,
     matchClass: matchClassList,
-    matchAttributeMatches: matchAttributeMatches,
-    matchAttributeContains: matchAttributeContains
+    matchAttributeMatches: attributeMatches,
+    matchAttributeContains: attributeContains,
+    matchAttributeStartsWith: attributeStartsWith,
+    matchAttributeEndsWith: attributeEndsWith,
+    matchAttributeSpaces: attributeSpaces,
+    matchAttributeDashes: attributeDashes
 };
