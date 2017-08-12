@@ -13,6 +13,6 @@ export default function (string) {
     return flatten(tree.map(t => {
         console.log("Indiv:");
         console.log(t);
-        return searcher(doc, t, []);
+        return searcher(doc, t, true, []);
     }), 1);
 }
