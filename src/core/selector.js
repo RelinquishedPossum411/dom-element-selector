@@ -80,11 +80,11 @@ export default function selector(string) {
                     }
 
                     else if (lastCharacter.match(/^\~$/)) {
-                        attr.matchSpaces[sub] = join;
+                        attr.spaces[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\|$/)) {
-                        attr.matchDashes[sub] = join;
+                        attr.dashes[sub] = join;
                     }
 
                     else if (lastCharacter.match(/^\^$/)) {

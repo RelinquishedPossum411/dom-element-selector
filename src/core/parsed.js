@@ -35,10 +35,10 @@ let parsed = {
         contains: {},
 
         // [attribute~=match]
-        matchSpaces: {},
+        spaces: {},
 
         // [attribute|=match]
-        matchDashes: {},
+        dashes: {},
 
         // [attribute^=match]
         startsWith: {},
