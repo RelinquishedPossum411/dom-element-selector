@@ -8,6 +8,7 @@ import attributeStartsWith from "./startsWith.attribute";
 import attributeEndsWith from "./endsWith.attribute";
 import attributeSpaces from "./spaces.attribute";
 import attributeDashes from "./dashes.attribute";
+import attributeHas from "./has.attribute";
 
 export default {
     matchId: matchId,
@@ -18,5 +19,6 @@ export default {
     matchAttributeStartsWith: attributeStartsWith,
     matchAttributeEndsWith: attributeEndsWith,
     matchAttributeSpaces: attributeSpaces,
-    matchAttributeDashes: attributeDashes
+    matchAttributeDashes: attributeDashes,
+    matchAttributeHas: attributeHas
 };
