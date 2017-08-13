@@ -99,8 +99,8 @@ export default function selector(string) {
 
                     else {
                         // Finally, if no match, then we seek an exact match.
-                        if (!attr.match[first]) {
-                            attr.match[first] = join;
+                        if (!attr.matches[first]) {
+                            attr.matches[first] = join;
                         }
                     }
                 }

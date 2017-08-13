@@ -14,11 +14,11 @@ export default {
     matchId: matchId,
     matchTag: matchTag,
     matchClass: matchClassList,
-    matchAttributeMatches: attributeMatches,
-    matchAttributeContains: attributeContains,
-    matchAttributeStartsWith: attributeStartsWith,
-    matchAttributeEndsWith: attributeEndsWith,
-    matchAttributeSpaces: attributeSpaces,
-    matchAttributeDashes: attributeDashes,
-    matchAttributeHas: attributeHas
+    matchAttributesMatches: attributeMatches,
+    matchAttributesContains: attributeContains,
+    matchAttributesStartsWith: attributeStartsWith,
+    matchAttributesEndsWith: attributeEndsWith,
+    matchAttributesSpaces: attributeSpaces,
+    matchAttributesDashes: attributeDashes,
+    matchAttributesHas: attributeHas
 };

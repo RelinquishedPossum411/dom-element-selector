@@ -29,7 +29,7 @@ let parsed = {
     classes: [],
     attributes: {
         // [attribute=match]
-        match: {},
+        matches: {},
 
         // [attribute*=match]
         contains: {},
