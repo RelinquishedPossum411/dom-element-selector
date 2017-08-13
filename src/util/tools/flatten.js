@@ -7,7 +7,7 @@ export default function (array, depth) {
 }
 
 function flatten(array, depth = 0, currentDepth = 0) {
-    if (depth && depth !== 0, currentDepth > depth)
+    if (array.length === 0 || (depth && depth !== 0 && currentDepth > depth))
         return array;
 
     if (array.length === 1)
