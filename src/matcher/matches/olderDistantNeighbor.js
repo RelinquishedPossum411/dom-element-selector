@@ -10,6 +10,8 @@ export default function (element, olderDistantNeighborMatch) {
 		while (olderNeighbor) {
 			if (searcher(olderNeighbor, olderDistantNeighborMatch))
 				return olderNeighbor;
+
+			olderNeighbor = olderNeighbor.previousElementSibling;
 		}
 	}
 
