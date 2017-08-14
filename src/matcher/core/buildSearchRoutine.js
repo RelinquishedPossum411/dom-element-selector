@@ -2,8 +2,13 @@
 import isEmptyObject from "../../util/tools/isEmptyObject";
 
 /**
- * Breaks down a search tree to the individual criteria to search for in
- * the DOM.
+ * Breaks down a search tree to the individual items that are used to
+ * match elements in the DOM.
+ *
+ * @param search - the search tree to build search instructions for.
+ *
+ * @return 	the search instructions as an array of object literals that contain
+ *			the specific details of the search instructions.
  */
 export default function (search) {
     let routine = [];
