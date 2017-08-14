@@ -1,6 +1,6 @@
 # A DOM Element Selector
 
-An attempt at something similar to the CSS element selectors and the JavaScript ```window.querySelector()``` method.
+An attempt at something similar to the CSS element selectors and the JavaScript ```document.querySelectorAll()``` method.
 
 ## Design
 
