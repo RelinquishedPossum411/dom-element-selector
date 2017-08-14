@@ -14,15 +14,17 @@ let parsed = {
     // An immediate descendant.
     child: null,
 
-    // Before Neighbor: adjacent only
-    beforeNeighbor: null,
+    // An immediately preceding sibling.
+    youngerSibling: null,
 
-    // After Neighbor: adjacent only
-    afterNeighbor: null,
+    // An immediately following sibling.
+    olderSibling: null,
 
-    beforeDistantNeighbor: null,
+    // A sibling, but younger.
+    youngerDistantSibling: null,
 
-    afterDistantNeighbor: null,
+    // A sibling, but older.
+    olderDistantSibling: null,
 
     tag: "",
     id: "",

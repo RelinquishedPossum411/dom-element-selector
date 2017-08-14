@@ -30,15 +30,15 @@ export default function (string) {
         else if (delimiter.match(/^\+$/)) {
             // Plus sign links elements that are adjacent.
 
-            comps[index + 1].beforeNeighbor = lastTree;
-            lastTree.afterNeighbor = comps[index + 1];
+            comps[index + 1].youngerSibling = lastTree;
+            lastTree.olderSibling = comps[index + 1];
         }
 
         else if (delimiter.match(/^\~$/)) {
             // Tilde links distant elements.
 
-            comps[index + 1].beforeDistantNeighbor = lastTree;
-            lastTree.afterDistantNeighbor = comps[index + 1];
+            comps[index + 1].youngerDistantSibling = lastTree;
+            lastTree.olderDistantSibling = comps[index + 1];
         }
 
         else if (delimiter.match(/^\>$/)) {
