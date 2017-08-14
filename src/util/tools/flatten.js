@@ -19,5 +19,6 @@ function flatten(array, depth = 0, currentDepth = 0) {
 }
 
 function isArray(array) {
-    return Object.prototype.toString.call(array) === "[object Array]";
+    // Polyfill
+    return Array.isArray ? Array.isArray(array) : Object.prototype.toString.call(array) === "[object Array]";
 }
