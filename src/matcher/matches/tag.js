@@ -1,4 +1,5 @@
 
 export default function (element, tag) {
-    return element.tagName.toLowerCase() === tag.toLowerCase();
+    // If we match a tag as "*", then select everything!
+    return tag.match(/^\*$/) || element.tagName.toLowerCase() === tag.toLowerCase();
 }
