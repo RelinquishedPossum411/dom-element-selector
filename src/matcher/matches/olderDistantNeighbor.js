@@ -1,17 +1,17 @@
 
 import searcher from "../core/searcher";
 
-export default function (element, olderDistantNeighborMatch) {
-	let olderNeighbor;
+export default function (element, olderDistantSiblingMatch) {
+	let olderSibling;
 
 	if (element.previousElementSibling) {
-		olderNeighbor = element.previousElementSibling;
+		olderSibling = element.previousElementSibling;
 
-		while (olderNeighbor) {
-			if (searcher(olderNeighbor, olderDistantNeighborMatch))
-				return olderNeighbor;
+		while (olderSibling) {
+			if (searcher(olderSibling, olderDistantSiblingMatch))
+				return olderSibling;
 
-			olderNeighbor = olderNeighbor.previousElementSibling;
+			olderSibling = olderSibling.previousElementSibling;
 		}
 	}
 
