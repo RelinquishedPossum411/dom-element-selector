@@ -23,8 +23,8 @@ export default function (string) {
         if (delimiter.match(/^ $/)) {
             // Space, so link them as distant relatives.
 
-            comps[index + 1].ancestor = lastTree;
-            lastTree.descendant = comps[index + 1];
+            comps[index + 1].descendant = lastTree;
+            lastTree.ancestor = comps[index + 1];
         }
 
         else if (delimiter.match(/^\+$/)) {
@@ -43,14 +43,12 @@ export default function (string) {
 
         else if (delimiter.match(/^\>$/)) {
             // Immediate parent/child relationship.
-
-            comps[index + 1].parent = lastTree;
-            lastTree.child = comps[index + 1];
+            comps[index + 1].child = lastTree;
+            lastTree.parent = comps[index + 1];
         }
 
         else if (delimiter.match(/^\,$/)) {
             // New tree.
-
             trees.push(comps[index + 1]);
         }
 
