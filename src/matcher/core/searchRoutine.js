@@ -18,6 +18,10 @@ export default class {
 
             if (functionNamespace[str] && functionNamespace[str](element, instruction.value))
                 matched++;
+            else {
+                if (!functionNamespace[str])
+                    matched++;
+            }
         }
 
         return matched === this.routine.length;
