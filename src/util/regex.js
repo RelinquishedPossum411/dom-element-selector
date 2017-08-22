@@ -4,12 +4,14 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
         rWhitespace = /\s/,
         rStringWhitespace = /^\s$/,
         rSelectorConstructs = /[\[\]#:.+]/,
-        rSelectAll = /[*]/;
+        rSelectAll = /[*]/,
+        rParenthesis = /[\(\)]/;
 
 export {
     rSpecialCharacters,
     rSpecialSeparators,
     rWhitespace,
     rStringWhitespace,
-    rSelectorConstructs
+    rSelectorConstructs,
+    rParenthesis
 };

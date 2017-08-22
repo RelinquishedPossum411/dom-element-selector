@@ -82,3 +82,12 @@ export function delimiterValidator(components, delimiters) {
 
     return true;
 }
+
+export function removeEmptyItems(array) {
+    for (let i = 0; i < array.length; i++) {
+        if (!array[i])
+            array.splice(i--, 1);
+    }
+
+    return array;
+}
