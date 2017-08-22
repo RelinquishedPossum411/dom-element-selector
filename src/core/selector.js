@@ -105,6 +105,11 @@ export default function selector(string) {
                     }
                 }
             }
+
+            // Pseudo-classes
+            else if (delimiters[i].match(/^\:$/)) {
+
+            }
         }
     }
 

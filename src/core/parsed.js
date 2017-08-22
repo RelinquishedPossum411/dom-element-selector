@@ -29,6 +29,7 @@ let parsed = {
     tag: "",
     id: "",
     classes: [],
+    pseudoClasses: [],
     attributes: {
         // [attribute=match]
         matches: {},
