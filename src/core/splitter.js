@@ -8,7 +8,7 @@ import * as regex from "../util/regex";
  * characters are concatenated.
  */
 export default function splitter(string, reg) {
-    reg = reg ? reg : regex.rSpecialCharacters;
+    reg = reg || regex.rSpecialCharacters;
 
     const logger = Logger.getLogger("selector");
 

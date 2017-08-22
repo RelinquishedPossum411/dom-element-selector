@@ -22,9 +22,8 @@ export default function searcher(root, search, depthSearch, selected) {
             // Only check the properties that are in the search criteria.
             // Ignore them if they are omitted; assume they match.
 
-            console.log("Checking " + child);
-            console.log("Tree: ");
-            console.log(search);
+            console.log("Checking ");
+            console.log(child);
 
             const routine = new Routine(search);
 
