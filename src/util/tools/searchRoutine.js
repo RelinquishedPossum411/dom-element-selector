@@ -1,5 +1,6 @@
 
 import buildSearchRoutine from "./buildSearchRoutine";
+import format from "./stringCamelCaseFormatter";
 
 export default class {
     constructor(searchTree) {
