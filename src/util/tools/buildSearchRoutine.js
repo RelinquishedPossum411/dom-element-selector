@@ -30,7 +30,7 @@ export default function (search) {
                     depth: search[term],
                     property: a,
                     value: search[term][a],
-                    formatted: format(term) + format(a)
+                    formatted: format(term, true).concat(format(a, true))
                 });
             }
         } else {
@@ -38,7 +38,7 @@ export default function (search) {
                 depth: search,
                 property: term,
                 value: search[term],
-                formatted: format(term)
+                formatted: format(term, true)
             });
         }
     }

@@ -16,7 +16,7 @@ import matches from "../matches/matches";
  *
  * @return returns @param selected.
  */
-export default function searcher(root, search, depthSearch, selected) {
+export default function searcher(root, tree, depthSearch, selected) {
     if (depthSearch) {
         for (const child of root.children) {
             // Only check the properties that are in the search criteria.
@@ -25,18 +25,18 @@ export default function searcher(root, search, depthSearch, selected) {
             console.log("Checking ");
             console.log(child);
 
-            const routine = new Routine(search);
+            const routine = new Routine(tree);
 
             if (routine.run(child, matches))
                 selected.push(child);
 
             // Recurse to search all children.
-            searcher(child, search, depthSearch, selected);
+            searcher(child, tree, depthSearch, selected);
         }
 
         return selected;
     }
 
     // If depthSearch is false, then just check if the root matches the routine.
-    return new Routine(search).run(root, matches);
+    return new Routine(tree).run(root, matches);
 }
