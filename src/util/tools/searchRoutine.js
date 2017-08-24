@@ -11,20 +11,15 @@ export default class {
         if (!this.routine)
             return;
 
-        let str,
-            matched = 0;
+        let str;
 
         for (const instruction of this.routine) {
             str = (prefix || "match") + instruction.formatted;
 
-            if (functionNamespace[str] && functionNamespace[str](element, instruction.value))
-                matched++;
-            else {
-                if (!functionNamespace[str])
-                    matched++;
-            }
+            if (functionNamespace[str] && !functionNamespace[str](element, instruction.value))
+                return false;
         }
 
-        return matched === this.routine.length;
+        return true;
     }
 }

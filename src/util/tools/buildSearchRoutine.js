@@ -1,5 +1,6 @@
 
 import isEmptyObject from "../../util/tools/isEmptyObject";
+import format from "../../util/tools/stringCamelCaseFormatter";
 
 /**
  * Breaks down a search tree to the individual items that are used to
