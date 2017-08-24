@@ -1,7 +1,7 @@
 
 import selector from "./selector";
 import splitter from "./splitter";
-import tidyer from "../util/delimiterClean";
+import tidyer from "../util/tidyer";
 import Logger from "../util/logger";
 import * as regex from "../util/regex";
 

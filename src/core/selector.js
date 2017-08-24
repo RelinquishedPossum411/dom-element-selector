@@ -2,7 +2,7 @@
 import grouper from "./grouper";
 import parsed from "./parsed";
 import splitter from "./splitter";
-import tidyer, { delimiterValidator } from "../util/delimiterClean";
+import tidyer, { delimiterValidator } from "../util/tidyer";
 import * as regex from "../util/regex";
 import dequote from "../util/dequote";
 

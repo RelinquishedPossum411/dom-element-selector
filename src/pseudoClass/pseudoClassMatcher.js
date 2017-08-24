@@ -1,6 +1,6 @@
 
 import * as matches from "./matches/matches";
-import { removeEmptyItems as tidyer } from "../util/delimiterClean";
+import { removeEmptyItems as tidyer } from "../util/tidyer";
 import { rParenthesis } from "../util/regex";
 
 /**

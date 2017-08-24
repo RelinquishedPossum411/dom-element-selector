@@ -3,7 +3,7 @@ import matcher from "../matcher/matcher";
 import makeTree from "./tree";
 import grouper from "./grouper";
 import splitter from "./splitter";
-import tidyer from "../util/delimiterClean";
+import tidyer from "../util/tidyer";
 import Logger from "../util/logger";
 
 export default class Selector {
