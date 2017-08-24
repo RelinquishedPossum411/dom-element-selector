@@ -29,7 +29,7 @@ let parsed = {
     tag: "",
     id: "",
     classes: [],
-    pseudoClasses: [],
+    pseudoClasses: {},
     attributes: {
         // [attribute=match]
         matches: {},

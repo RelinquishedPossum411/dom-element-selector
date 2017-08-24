@@ -2,7 +2,8 @@
 import grouper from "./grouper";
 import parsed from "./parsed";
 import splitter from "./splitter";
-import tidyer, { delimiterValidator } from "../util/tidyer";
+import tidyer, { delimiterValidator, removeEmptyItems } from "../util/tidyer";
+import format from "../util/tools/stringCamelCaseFormatter";
 import * as regex from "../util/regex";
 import dequote from "../util/dequote";
 
@@ -105,11 +106,16 @@ export default function selector(string) {
                     }
                 }
             }
+        }
 
-            // Pseudo-classes
-            else if (delimiters[i].match(/^\:$/)) {
+        // Pseudo-classes
+        else if (delimiters[i].match(/^\:$/)) {
+            let pc = removeEmptyItems(parts[i + 1].split(regex.rParenthesis));
 
-            }
+            if (!pc.length)
+                return;
+
+            selected.pseudoClasses[format(pc[0])] = pc[1] || undefined;
         }
     }
 
