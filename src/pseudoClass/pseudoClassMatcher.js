@@ -1,4 +1,5 @@
 
+import * as matches from "./matches/matches";
 import { removeEmptyItems as tidyer } from "../util/delimiterClean";
 import { rParenthesis } from "../util/regex";
 
@@ -14,4 +15,7 @@ export default function (string) {
 
     // Index 0 : pseudo-class name
     // Index 1 : parameters, if any
+    // If the pseudo-class function is implemented, evaluate by using it,
+    // if not simply 'skip' by returning true.
+    return matches[pseudoClass[0]] ? matches[pseudoClass[0]](pseudoClass[1]) : true;
 }
