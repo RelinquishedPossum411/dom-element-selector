@@ -20,9 +20,8 @@ export default function selector(string) {
         cursor = 0,
         components = splitter(string, regex.rSelectorConstructs);
 
-    if (!delimiterValidator(components.sub, components.delimiters)) {
+    if (!delimiterValidator(components.sub, components.delimiters))
         return;
-    }
 
     console.log(components.sub);
     console.log(components.delimiters);
