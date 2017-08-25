@@ -1,2 +1,4 @@
 
-export default function () {}
+export default function (element) {
+    console.log("FirstChild Module");
+}

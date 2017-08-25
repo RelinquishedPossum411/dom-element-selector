@@ -1,21 +1,25 @@
 
-import * as matches from "./matches/matches";
-import { removeEmptyItems as tidyer } from "../util/tidyer";
+import matches from "./matches/matches";
+import format from "../util/tools/stringCamelCaseFormatter";
 import { rParenthesis } from "../util/regex";
 
 /**
- * Parses a string that represents a pseudo-class. Splits the string by
- * parenthesis.
+ * Evaluates each entry in an object literal of pseudo-classes and checks if it
+ * matches the equivalent properties in a specified DOM element.
  *
- * @param string - a substring that represents a pseudo-class. Pass the
- * substring that immediately follows a colon, ':'.
+ * @param element - an element of the DOM.
+ * @param pseudoClasses - an object literal representing the pseudo-classes in
+ * a selector.
+ *
+ * @return returns true if
  */
-export default function (string) {
-    const pseudoClass = tidyer(string.split(rParenthesis));
-
-    // Index 0 : pseudo-class name
-    // Index 1 : parameters, if any
+export default function (element, pseudoClasses) {
     // If the pseudo-class function is implemented, evaluate by using it,
     // if not simply 'skip' by returning true.
-    return matches[pseudoClass[0]] ? matches[pseudoClass[0]](pseudoClass[1]) : true;
+    for (const pseudoClass in pseudoClasses) {
+        if (matches[pseudoClass] && !matches[pseudoClass](element, pseudoClasses[pseudoClass]))
+            return false;
+    }
+
+    return true;
 }

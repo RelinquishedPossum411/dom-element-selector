@@ -16,6 +16,9 @@ import attributeSpaces from "./spaces.attribute";
 import attributeDashes from "./dashes.attribute";
 import attributeHas from "./has.attribute";
 
+// Pseudo-class Module
+import pseudoClassMatcher from "../../pseudoClass/pseudoClassMatcher";
+
 export default {
     matchId: matchId,
     matchTag: matchTag,
@@ -30,5 +33,6 @@ export default {
     matchAttributesEndsWith: attributeEndsWith,
     matchAttributesSpaces: attributeSpaces,
     matchAttributesDashes: attributeDashes,
-    matchAttributesHas: attributeHas
+    matchAttributesHas: attributeHas,
+    matchPseudoClasses: pseudoClassMatcher
 };
