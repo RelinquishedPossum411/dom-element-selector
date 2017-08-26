@@ -1,4 +1,5 @@
 
 export default function (element) {
-    console.log("FirstChild Module");
+    // Is first-child if element does not have a previous sibling.
+    return !!element.previousElementSibling;
 }
