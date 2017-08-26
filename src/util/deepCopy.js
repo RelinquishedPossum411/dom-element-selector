@@ -1,13 +1,14 @@
+
 /**
  * Deep Copyer
  * Performs a deep copy on object literals and arrays and covers all nested
  * object literals and arrays.
  * @author Benjamin Huang
  */
-
 "use strict";
 
-const toStr = Object.prototype.toString;
+const isObject = (object) => Object.prototype.toString.call(object) === "[object Object]";
+const isArray = (array) => Object.prototype.toString.call(array) === "[object Array]";
 
 /**
  * Checks whether an object literal or array is a "deep copy" with another
@@ -19,8 +20,7 @@ const toStr = Object.prototype.toString;
  */
 function isDeepCopy(a, b) {
     for (const c in a) {
-        if (toStr.call(a[c]) === "[object Object]" ||
-            toStr.call(a[c]) === "[object Array]") {
+        if (isObject(a[c]) || isArray(a[c])) {
             if (!b[c] || a[c] === b[c]) {
                 return false;
             }
@@ -47,16 +47,15 @@ function deepMergeObject(target, ...sources) {
     let src;
 
     for (const i of sources)
-        if (toStr.call(target) !== "[object Object]" ||
-            toStr.call(i) !== "[object Object]")
+        if (!isObject(target) || !isObject(i))
             return;
 
     for (const source of sources) {
         for (const item in source) {
             src = source[item];
-            target[item] =  toStr.call(src) === "[object Object]" ?
+            target[item] =  isObject(src) ?
                             Object.assign({}, deepMergeObject({}, src)) : (
-                                toStr.call(src) === "[object Array]" ?
+                                isArray(src) ?
                                 deepMergeArray([], src) :
                                 source[item]);
         }
@@ -75,16 +74,15 @@ function deepMergeObject(target, ...sources) {
  */
 function deepMergeArray(target, ...sources) {
     for (const i of sources)
-        if (toStr.call(target) !== "[object Array]" ||
-            toStr.call(i) !== "[object Array]")
+        if (!isArray(target) || !isArray(i))
             return;
 
     for (const source of sources) {
         for (const item of source) {
             target.push(
-                toStr.call(item) === "[object Array]" ?
+                isArray(item) ?
                 deepMergeArray([], item) : (
-                    toStr.call(item) === "[object Object]" ?
+                    isObject(item) ?
                     deepMergeObject({}, item) :
                     item)
             );
