@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -152,10 +152,33 @@ function isSubsetObject(obj1, obj2, fn, proper) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return rSpecialCharacters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return rSpecialSeparators; });
+/* unused harmony export rWhitespace */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return rStringWhitespace; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return rSelectorConstructs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return rParenthesis; });
+
+const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
+        rSpecialSeparators = /[>+~,\s]/,
+        rWhitespace = /\s/,
+        rStringWhitespace = /^\s$/,
+        rSelectorConstructs = /[\[\]#:.+]/,
+        rSelectAll = /[*]/,
+        rParenthesis = /[\(\)]/;
+
+
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = searcher;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__searchRoutine__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__matches_matches__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_tools_searchRoutine__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__matches_matches__ = __webpack_require__(23);
 
 
 
@@ -174,7 +197,7 @@ function isSubsetObject(obj1, obj2, fn, proper) {
  *
  * @return returns @param selected.
  */
-function searcher(root, search, depthSearch, selected) {
+function searcher(root, tree, depthSearch, selected) {
     if (depthSearch) {
         for (const child of root.children) {
             // Only check the properties that are in the search criteria.
@@ -182,46 +205,22 @@ function searcher(root, search, depthSearch, selected) {
 
             console.log("Checking ");
             console.log(child);
-            console.log("Tree: ");
-            console.log(search);
 
-            const routine = new __WEBPACK_IMPORTED_MODULE_0__searchRoutine__["a" /* default */](search);
+            const routine = new __WEBPACK_IMPORTED_MODULE_0__util_tools_searchRoutine__["a" /* default */](tree);
 
             if (routine.run(child, __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */]))
                 selected.push(child);
 
             // Recurse to search all children.
-            searcher(child, search, depthSearch, selected);
+            searcher(child, tree, depthSearch, selected);
         }
 
         return selected;
     }
 
     // If depthSearch is false, then just check if the root matches the routine.
-    console.log(new __WEBPACK_IMPORTED_MODULE_0__searchRoutine__["a" /* default */](search));
-    return new __WEBPACK_IMPORTED_MODULE_0__searchRoutine__["a" /* default */](search).run(root, __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */]);
+    return new __WEBPACK_IMPORTED_MODULE_0__util_tools_searchRoutine__["a" /* default */](tree).run(root, __WEBPACK_IMPORTED_MODULE_2__matches_matches__["a" /* default */]);
 }
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return rSpecialCharacters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return rSpecialSeparators; });
-/* unused harmony export rWhitespace */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return rStringWhitespace; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return rSelectorConstructs; });
-
-const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
-        rSpecialSeparators = /[>+~,\s]/,
-        rWhitespace = /\s/,
-        rStringWhitespace = /^\s$/,
-        rSelectorConstructs = /[\[\]#:.+]/,
-        rSelectAll = /[*]/;
-
-
 
 
 /***/ }),
@@ -229,12 +228,33 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+
+/**
+ * Reduces a string by removing all junk characters and applying a camel-cased
+ * format.
+ *
+ * @param string - a string to camel-case-itize.
+ * @param capitalizeFirstCharacter - capitalizes the first character of the
+ * first substring if true.
+ *
+ * @return returns a formatted string in camel-case.
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (string, capitalizeFirstCharacter) {
+    return string.split(/[-_\s]+/).map((a, b) => b > 0 || capitalizeFirstCharacter ? a ? a.charAt(0).toUpperCase() + (a.length > 1 ? a.substring(1) : "") : "" : a).join("");
+});
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = grouper;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__splitter__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_logger__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__selector__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__splitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_tidyer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_logger__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(1);
 
 
 
@@ -248,10 +268,10 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
  */
  function grouper(string) {
      const logger = __WEBPACK_IMPORTED_MODULE_3__util_logger__["a" /* default */].newLogger("selector");
-     let components = Object(__WEBPACK_IMPORTED_MODULE_1__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_4__util_regex__["c" /* rSpecialSeparators */]);
+     let components = Object(__WEBPACK_IMPORTED_MODULE_1__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_4__util_regex__["d" /* rSpecialSeparators */]);
 
      // Clean the components up.
-     if (Object(__WEBPACK_IMPORTED_MODULE_2__util_delimiterClean__["a" /* default */])(components.sub, components.delimiters))
+     if (Object(__WEBPACK_IMPORTED_MODULE_2__util_tidyer__["a" /* default */])(components.sub, components.delimiters))
         logger.add("Successfully tidied up the components.");
     else
         logger.add("Fatal error in cleaning up the components.");
@@ -273,13 +293,13 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = splitter;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_logger__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_regex__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_logger__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_regex__ = __webpack_require__(1);
 
 
 
@@ -290,7 +310,7 @@ const   rSpecialCharacters = /[!"#$%&'()+,./:;<=>?@[\]^`{|}~ ]/,
  * characters are concatenated.
  */
 function splitter(string, reg) {
-    reg = reg ? reg : __WEBPACK_IMPORTED_MODULE_1__util_regex__["b" /* rSpecialCharacters */];
+    reg = reg || __WEBPACK_IMPORTED_MODULE_1__util_regex__["c" /* rSpecialCharacters */];
 
     const logger = __WEBPACK_IMPORTED_MODULE_0__util_logger__["a" /* default */].getLogger("selector");
 
@@ -347,7 +367,7 @@ function fixAttributes(components, delimiters) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -424,13 +444,14 @@ class Logger {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = tidy;
 /* harmony export (immutable) */ __webpack_exports__["b"] = delimiterValidator;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__regex__ = __webpack_require__(2);
+/* harmony export (immutable) */ __webpack_exports__["c"] = removeEmptyItems;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__regex__ = __webpack_require__(1);
 
 
 
@@ -444,7 +465,7 @@ function tidy(components, delimiters) {
     let i = 0;
 
     for (; i < delimiters.length; i++) {
-        if (__WEBPACK_IMPORTED_MODULE_0__regex__["d" /* rStringWhitespace */].test(delimiters[i])) {
+        if (__WEBPACK_IMPORTED_MODULE_0__regex__["e" /* rStringWhitespace */].test(delimiters[i])) {
             if (components[i] === "") {
                 delimiters.splice(i, 1);
                 components.splice(i, 1);
@@ -516,9 +537,18 @@ function delimiterValidator(components, delimiters) {
     return true;
 }
 
+function removeEmptyItems(array) {
+    for (let i = 0; i < array.length; i++) {
+        if (!array[i])
+            array.splice(i--, 1);
+    }
+
+    return array;
+}
+
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -530,14 +560,14 @@ const glob = window || global || this || null; // Eh, just use this
 
 /* harmony default export */ __webpack_exports__["a"] = (glob);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(21)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(22)))
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(4);
 
 
 
@@ -602,20 +632,20 @@ const glob = window || global || this || null; // Eh, just use this
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(7);
+/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_globals__ = __webpack_require__(8);
 
 
 
 
 ((global, Selector) => {
     if (typeof define === "function" &&
-        __webpack_require__(38)) {
+        __webpack_require__(42)) {
         define(() => {
             global.Selector = Selector;
             return global.Selector;
@@ -627,10 +657,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
 })(__WEBPACK_IMPORTED_MODULE_1__util_globals__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__core__["a" /* default */]);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(10)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(11)(module)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -660,27 +690,27 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_core__ = __webpack_require__(13);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__core_core__["a"]; });
 
 
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matcher_matcher__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tree__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__grouper__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__splitter__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_delimiterClean__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_logger__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matcher_matcher__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tree__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__grouper__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__splitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_tidyer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_logger__ = __webpack_require__(6);
 
 
 
@@ -724,7 +754,7 @@ class Selector {
     }
 
     static tidy(components, delimiters) {
-        Object(__WEBPACK_IMPORTED_MODULE_4__util_delimiterClean__["a" /* default */])(components, delimiters);
+        Object(__WEBPACK_IMPORTED_MODULE_4__util_tidyer__["a" /* default */])(components, delimiters);
 
         return [components, delimiters];
     }
@@ -734,14 +764,14 @@ class Selector {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_tree__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_searcher__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_tools_flatten__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_globals__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_tree__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_searcher__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_tools_flatten__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_globals__ = __webpack_require__(8);
 
 
 
@@ -763,17 +793,19 @@ class Selector {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = selector;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_regex__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_dequote__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__grouper__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__parsed__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__splitter__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util_tidyer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util_tools_stringCamelCaseFormatter__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__util_regex__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__util_dequote__ = __webpack_require__(18);
+
 
 
 
@@ -793,11 +825,10 @@ function selector(string) {
 
     let parts, delimiters,
         cursor = 0,
-        components = Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_4__util_regex__["a" /* rSelectorConstructs */]);
+        components = Object(__WEBPACK_IMPORTED_MODULE_2__splitter__["a" /* default */])(string, __WEBPACK_IMPORTED_MODULE_5__util_regex__["b" /* rSelectorConstructs */]);
 
-    if (!Object(__WEBPACK_IMPORTED_MODULE_3__util_delimiterClean__["b" /* delimiterValidator */])(components.sub, components.delimiters)) {
+    if (!Object(__WEBPACK_IMPORTED_MODULE_3__util_tidyer__["b" /* delimiterValidator */])(components.sub, components.delimiters))
         return;
-    }
 
     console.log(components.sub);
     console.log(components.delimiters);
@@ -844,7 +875,7 @@ function selector(string) {
                     // Then there is only the attribute.
                     attr.has.push(first);
                 } else {
-                    join = Object(__WEBPACK_IMPORTED_MODULE_5__util_dequote__["a" /* default */])(split.slice(1).join("="));
+                    join = Object(__WEBPACK_IMPORTED_MODULE_6__util_dequote__["a" /* default */])(split.slice(1).join("="));
                     lastCharacter = first.charAt(first.length - 1);
                     sub = first.substring(0, first.length - 1);
 
@@ -882,6 +913,16 @@ function selector(string) {
                 }
             }
         }
+
+        // Pseudo-classes
+        else if (delimiters[i].match(/^\:$/)) {
+            let pc = Object(__WEBPACK_IMPORTED_MODULE_3__util_tidyer__["c" /* removeEmptyItems */])(parts[i + 1].split(__WEBPACK_IMPORTED_MODULE_5__util_regex__["a" /* rParenthesis */]));
+
+            if (!pc.length)
+                return;
+
+            selected.pseudoClasses[Object(__WEBPACK_IMPORTED_MODULE_4__util_tools_stringCamelCaseFormatter__["a" /* default */])(pc[0])] = pc[1] || undefined;
+        }
     }
 
     return selected;
@@ -889,11 +930,11 @@ function selector(string) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_deepCopy__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_deepCopy__ = __webpack_require__(17);
 
 
 
@@ -925,6 +966,7 @@ let parsed = {
     tag: "",
     id: "",
     classes: [],
+    pseudoClasses: {},
     attributes: {
         // [attribute=match]
         matches: {},
@@ -955,13 +997,14 @@ let parsed = {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export isDeepCopy */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return deepMergeObject; });
 /* unused harmony export deepMergeArray */
+
 /**
  * Deep Copyer
  * Performs a deep copy on object literals and arrays and covers all nested
@@ -970,8 +1013,8 @@ let parsed = {
  */
 
 
-
-const toStr = Object.prototype.toString;
+const isObject = (object) => Object.prototype.toString.call(object) === "[object Object]";
+const isArray = (array) => Object.prototype.toString.call(array) === "[object Array]";
 
 /**
  * Checks whether an object literal or array is a "deep copy" with another
@@ -983,8 +1026,7 @@ const toStr = Object.prototype.toString;
  */
 function isDeepCopy(a, b) {
     for (const c in a) {
-        if (toStr.call(a[c]) === "[object Object]" ||
-            toStr.call(a[c]) === "[object Array]") {
+        if (isObject(a[c]) || isArray(a[c])) {
             if (!b[c] || a[c] === b[c]) {
                 return false;
             }
@@ -1011,16 +1053,15 @@ function deepMergeObject(target, ...sources) {
     let src;
 
     for (const i of sources)
-        if (toStr.call(target) !== "[object Object]" ||
-            toStr.call(i) !== "[object Object]")
+        if (!isObject(target) || !isObject(i))
             return;
 
     for (const source of sources) {
         for (const item in source) {
             src = source[item];
-            target[item] =  toStr.call(src) === "[object Object]" ?
+            target[item] =  isObject(src) ?
                             Object.assign({}, deepMergeObject({}, src)) : (
-                                toStr.call(src) === "[object Array]" ?
+                                isArray(src) ?
                                 deepMergeArray([], src) :
                                 source[item]);
         }
@@ -1039,16 +1080,15 @@ function deepMergeObject(target, ...sources) {
  */
 function deepMergeArray(target, ...sources) {
     for (const i of sources)
-        if (toStr.call(target) !== "[object Array]" ||
-            toStr.call(i) !== "[object Array]")
+        if (!isArray(target) || !isArray(i))
             return;
 
     for (const source of sources) {
         for (const item of source) {
             target.push(
-                toStr.call(item) === "[object Array]" ?
+                isArray(item) ?
                 deepMergeArray([], item) : (
-                    toStr.call(item) === "[object Object]" ?
+                    isObject(item) ?
                     deepMergeObject({}, item) :
                     item)
             );
@@ -1062,7 +1102,7 @@ function deepMergeArray(target, ...sources) {
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1079,48 +1119,51 @@ function deepMergeArray(target, ...sources) {
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__buildSearchRoutine__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__buildSearchRoutine__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stringCamelCaseFormatter__ = __webpack_require__(3);
+
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = (class {
     constructor(searchTree) {
         this.routine = Object(__WEBPACK_IMPORTED_MODULE_0__buildSearchRoutine__["a" /* default */])(searchTree);
+
+        console.log("Using routine");
+        console.log(this.routine);
     }
 
-    run(element, functionNamespace) {
+    run(element, functionNamespace, prefix) {
         if (!this.routine)
             return;
 
-        let str,
-            matched = 0;
+        let str;
 
+        // Main selectors
         for (const instruction of this.routine) {
-            str = "match" + instruction.formatted;
+            str = (prefix || "match") + instruction.formatted;
 
-            if (functionNamespace[str] && functionNamespace[str](element, instruction.value))
-                matched++;
-            else {
-                if (!functionNamespace[str])
-                    matched++;
-            }
+            if (functionNamespace[str] && !functionNamespace[str](element, instruction.value))
+                return false;
         }
 
-        return matched === this.routine.length;
+        return true;
     }
 });
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_tools_isEmptyObject__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_tools_isEmptyObject__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_tools_stringCamelCaseFormatter__ = __webpack_require__(3);
+
 
 
 
@@ -1153,7 +1196,7 @@ function deepMergeArray(target, ...sources) {
                     depth: search[term],
                     property: a,
                     value: search[term][a],
-                    formatted: format(term) + format(a)
+                    formatted: Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_stringCamelCaseFormatter__["a" /* default */])(term, true).concat(Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_stringCamelCaseFormatter__["a" /* default */])(a, true))
                 });
             }
         } else {
@@ -1161,7 +1204,7 @@ function deepMergeArray(target, ...sources) {
                 depth: search,
                 property: term,
                 value: search[term],
-                formatted: format(term)
+                formatted: Object(__WEBPACK_IMPORTED_MODULE_1__util_tools_stringCamelCaseFormatter__["a" /* default */])(term, true)
             });
         }
     }
@@ -1169,16 +1212,9 @@ function deepMergeArray(target, ...sources) {
     return routine;
 });
 
-/**
- * Formats an attribute string so that we can work with it.
- */
-function format(string) {
-    return string.split(/[-_]+/).map(v => v ? v.charAt(0).toUpperCase() + (v.length > 1 ? v.substring(1) : "") : "").join("");
-}
-
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1190,7 +1226,7 @@ function format(string) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1217,24 +1253,25 @@ module.exports = g;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classList__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__id__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tag__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__parent__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ancestor__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__olderSibling__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__olderDistantSibling__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__matches_attribute__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__contains_attribute__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__startsWith_attribute__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__endsWith_attribute__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__spaces_attribute__ = __webpack_require__(34);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__dashes_attribute__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__has_attribute__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classList__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__id__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tag__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__parent__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ancestor__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__olderSibling__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__olderDistantSibling__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__matches_attribute__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__contains_attribute__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__startsWith_attribute__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__endsWith_attribute__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__spaces_attribute__ = __webpack_require__(35);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__dashes_attribute__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__has_attribute__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__pseudoClass_pseudoClassMatcher__ = __webpack_require__(38);
 
 
 
@@ -1251,6 +1288,9 @@ module.exports = g;
 
 
 
+
+
+// Pseudo-class Module
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1267,12 +1307,13 @@ module.exports = g;
     matchAttributesEndsWith: __WEBPACK_IMPORTED_MODULE_10__endsWith_attribute__["a" /* default */],
     matchAttributesSpaces: __WEBPACK_IMPORTED_MODULE_11__spaces_attribute__["a" /* default */],
     matchAttributesDashes: __WEBPACK_IMPORTED_MODULE_12__dashes_attribute__["a" /* default */],
-    matchAttributesHas: __WEBPACK_IMPORTED_MODULE_13__has_attribute__["a" /* default */]
+    matchAttributesHas: __WEBPACK_IMPORTED_MODULE_13__has_attribute__["a" /* default */],
+    matchPseudoClasses: __WEBPACK_IMPORTED_MODULE_14__pseudoClass_pseudoClassMatcher__["a" /* default */]
 });
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1296,7 +1337,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1307,7 +1348,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1319,30 +1360,25 @@ module.exports = g;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(2);
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = (function (element, parentMatch) {
-    console.log("ELEMENT:");
-    console.log(element.parentElement);
-    console.log(parentMatch);
-    console.log(element.parentElement ? Object(__WEBPACK_IMPORTED_MODULE_0__core_searcher__["a" /* default */])(element.parentElement, parentMatch, false) : "");
-
     return element.parentElement ? Object(__WEBPACK_IMPORTED_MODULE_0__core_searcher__["a" /* default */])(element.parentElement, parentMatch, false) : false;
 });
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(2);
 
 
 
@@ -1365,27 +1401,25 @@ module.exports = g;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(2);
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = (function (element, olderSiblingMatch) {
-
-    console.log("Matching this");
     return element.nextElementSibling ? Object(__WEBPACK_IMPORTED_MODULE_0__core_searcher__["a" /* default */])(element.nextElementSibling, olderSiblingMatch, false) : false;
 });
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_searcher__ = __webpack_require__(2);
 
 
 
@@ -1408,7 +1442,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1432,7 +1466,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1453,7 +1487,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1473,7 +1507,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1489,7 +1523,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1505,7 +1539,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1521,7 +1555,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1547,7 +1581,72 @@ module.exports = g;
 
 
 /***/ }),
-/* 37 */
+/* 38 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__matches_matches__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__util_tools_stringCamelCaseFormatter__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util_regex__ = __webpack_require__(1);
+
+
+
+
+
+/**
+ * Evaluates each entry in an object literal of pseudo-classes and checks if it
+ * matches the equivalent properties in a specified DOM element.
+ *
+ * @param element - an element of the DOM.
+ * @param pseudoClasses - an object literal representing the pseudo-classes in
+ * a selector.
+ *
+ * @return returns true if
+ */
+/* harmony default export */ __webpack_exports__["a"] = (function (element, pseudoClasses) {
+    // If the pseudo-class function is implemented, evaluate by using it,
+    // if not simply 'skip' by returning true.
+    for (const pseudoClass in pseudoClasses) {
+        if (__WEBPACK_IMPORTED_MODULE_0__matches_matches__["a" /* default */][pseudoClass] && !__WEBPACK_IMPORTED_MODULE_0__matches_matches__["a" /* default */][pseudoClass](element, pseudoClasses[pseudoClass]))
+            return false;
+    }
+
+    return true;
+});
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firstChild__ = __webpack_require__(40);
+
+
+
+// Each pseudo-class function receives two parameters:
+//  1. the element being checked.
+//  2. the value of any parameters of the pseudo-class, like nth-child(n).
+// So the value, n, is passed in. If there is no parameter, pass in undefined.
+/* harmony default export */ __webpack_exports__["a"] = ({
+    firstChild: __WEBPACK_IMPORTED_MODULE_0__firstChild__["a" /* default */]
+});
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+/* harmony default export */ __webpack_exports__["a"] = (function (element) {
+    // Is first-child if element has no previous siblings.
+    return element.previousElementSibling === false;
+});
+
+
+/***/ }),
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1578,7 +1677,7 @@ function isArray(array) {
 
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
