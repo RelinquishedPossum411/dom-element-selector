@@ -1,6 +1,8 @@
 
 import pseudoFirstChild from "./firstChild";
 import pseudoLastChild from "./lastChild";
+import pseudoNthChild from "./nthChild";
+import pseudoOnlyChild from "./onlyChild";
 
 // Each pseudo-class function receives two parameters:
 //  1. the element being checked.
@@ -8,5 +10,7 @@ import pseudoLastChild from "./lastChild";
 // So the value, n, is passed in. If there is no parameter, pass in undefined.
 export default {
     firstChild: pseudoFirstChild,
-	lastChild: pseudoLastChild
+	lastChild: pseudoLastChild,
+	nthChild: pseudoNthChild,
+	onlyChild: pseudoOnlyChild
 };
