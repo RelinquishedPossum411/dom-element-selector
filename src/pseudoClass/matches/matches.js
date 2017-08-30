@@ -3,6 +3,7 @@ import pseudoFirstChild from "./firstChild";
 import pseudoLastChild from "./lastChild";
 import pseudoNthChild from "./nthChild";
 import pseudoOnlyChild from "./onlyChild";
+import pseudoReadOnly from "./readOnly";
 
 // Each pseudo-class function receives two parameters:
 //  1. the element being checked.
@@ -12,5 +13,6 @@ export default {
     firstChild: pseudoFirstChild,
 	lastChild: pseudoLastChild,
 	nthChild: pseudoNthChild,
-	onlyChild: pseudoOnlyChild
+	onlyChild: pseudoOnlyChild,
+	readOnly: pseudoReadOnly
 };
