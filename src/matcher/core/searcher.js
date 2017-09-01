@@ -21,10 +21,6 @@ export default function searcher(root, tree, depthSearch, selected) {
         for (const child of root.children) {
             // Only check the properties that are in the search criteria.
             // Ignore them if they are omitted; assume they match.
-
-            console.log("Checking ");
-            console.log(child);
-
             const routine = new Routine(tree);
 
             if (routine.run(child, matches))

@@ -56,4 +56,4 @@ let parsed = {
 
 export default function () {
     return deep({}, parsed);
-};
+}

@@ -12,7 +12,7 @@ Loggers.getLogger = function (name) {
     }
 
     return loggers[name] || null;
-}
+};
 
 Loggers.newLogger = function (name) {
     if (!name) {
@@ -25,7 +25,7 @@ Loggers.newLogger = function (name) {
     loggers[name] = new Logger();
 
     return loggers[name];
-}
+};
 
 class Logger {
     constructor() {
