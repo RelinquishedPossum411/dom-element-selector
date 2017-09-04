@@ -3,10 +3,8 @@ import matcher from "../matcher/matcher";
 import makeTree from "./tree";
 import grouper from "./grouper";
 import splitter from "./splitter";
-import tidyer from "../util/tidyer";
-import Logger from "../util/logger";
 
-export default class Selector {
+export default class {
     static match(string) {
         return matcher(string);
     }
@@ -30,19 +28,7 @@ export default class Selector {
             this.getLastLog().toConsole();
     }
 
-
     static getLastLog() {
         return Logger.getLogger("selector");
-    }
-
-    // TODO: remove - debugging only.
-    static substringer(string, regex) {
-        return splitter(string, regex);
-    }
-
-    static tidy(components, delimiters) {
-        tidyer(components, delimiters);
-
-        return [components, delimiters];
     }
 }
